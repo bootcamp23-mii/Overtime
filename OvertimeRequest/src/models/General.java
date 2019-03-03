@@ -9,7 +9,7 @@ package models;
  *
  * @author milhamafemi
  */
-public class GeneralModels {
+public class General {
     private String[] id;
     private String[] name;
 
@@ -29,11 +29,11 @@ public class GeneralModels {
         this.name = name;
     }
 
-    public GeneralModels(String[] id, String[] name) {
+    public General(String[] id, String[] name) {
         this.id = id;
         this.name = name;
     }
 
-    public GeneralModels() {
+    public General() {
     }
 }
