@@ -7,8 +7,8 @@ package models;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
 @Entity
 @Table(name = "OVERTIME")
@@ -56,7 +56,7 @@ public class Overtime implements Serializable {
     @Column(name = "STATUS")
     private BigInteger status;
     @OneToMany(mappedBy = "overtime", fetch = FetchType.LAZY)
-    private Collection<Task> taskCollection;
+    private List<Task> taskList;
     @JoinColumn(name = "TIME_SHEET", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private TimeSheet timeSheet;
@@ -109,12 +109,12 @@ public class Overtime implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Task> getTaskCollection() {
-        return taskCollection;
+    public List<Task> getTaskList() {
+        return taskList;
     }
 
-    public void setTaskCollection(Collection<Task> taskCollection) {
-        this.taskCollection = taskCollection;
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
     }
 
     public TimeSheet getTimeSheet() {

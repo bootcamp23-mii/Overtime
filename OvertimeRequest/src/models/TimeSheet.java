@@ -6,8 +6,8 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
 @Entity
 @Table(name = "TIME_SHEET")
@@ -52,7 +52,7 @@ public class TimeSheet implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee employee;
     @OneToMany(mappedBy = "timeSheet", fetch = FetchType.LAZY)
-    private Collection<Overtime> overtimeCollection;
+    private List<Overtime> overtimeList;
 
     public TimeSheet() {
     }
@@ -94,12 +94,12 @@ public class TimeSheet implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Overtime> getOvertimeCollection() {
-        return overtimeCollection;
+    public List<Overtime> getOvertimeList() {
+        return overtimeList;
     }
 
-    public void setOvertimeCollection(Collection<Overtime> overtimeCollection) {
-        this.overtimeCollection = overtimeCollection;
+    public void setOvertimeList(List<Overtime> overtimeList) {
+        this.overtimeList = overtimeList;
     }
 
     @Override

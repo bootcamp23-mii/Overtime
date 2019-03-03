@@ -6,7 +6,7 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
 @Entity
 @Table(name = "DIVISION")
@@ -40,7 +40,7 @@ public class Division implements Serializable {
     @Column(name = "NAME")
     private String name;
     @OneToMany(mappedBy = "division", fetch = FetchType.LAZY)
-    private Collection<Employee> employeeCollection;
+    private List<Employee> employeeList;
 
     public Division() {
     }
@@ -66,12 +66,12 @@ public class Division implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Employee> getEmployeeCollection() {
-        return employeeCollection;
+    public List<Employee> getEmployeeList() {
+        return employeeList;
     }
 
-    public void setEmployeeCollection(Collection<Employee> employeeCollection) {
-        this.employeeCollection = employeeCollection;
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
     }
 
     @Override

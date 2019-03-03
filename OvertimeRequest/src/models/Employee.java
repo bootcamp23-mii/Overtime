@@ -7,7 +7,7 @@ package models;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
 @Entity
 @Table(name = "EMPLOYEE")
@@ -52,12 +52,12 @@ public class Employee implements Serializable {
     @Column(name = "SALARY")
     private BigInteger salary;
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private Collection<Role> roleCollection;
+    private List<Role> roleList;
     @JoinColumn(name = "DIVISION", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Division division;
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private Collection<Employee> employeeCollection;
+    private List<Employee> employeeList;
     @JoinColumn(name = "MANAGER", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee manager;
@@ -65,7 +65,7 @@ public class Employee implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Site site;
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private Collection<TimeSheet> timeSheetCollection;
+    private List<TimeSheet> timeSheetList;
 
     public Employee() {
     }
@@ -115,12 +115,12 @@ public class Employee implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Role> getRoleCollection() {
-        return roleCollection;
+    public List<Role> getRoleList() {
+        return roleList;
     }
 
-    public void setRoleCollection(Collection<Role> roleCollection) {
-        this.roleCollection = roleCollection;
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
     }
 
     public Division getDivision() {
@@ -132,12 +132,12 @@ public class Employee implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Employee> getEmployeeCollection() {
-        return employeeCollection;
+    public List<Employee> getEmployeeList() {
+        return employeeList;
     }
 
-    public void setEmployeeCollection(Collection<Employee> employeeCollection) {
-        this.employeeCollection = employeeCollection;
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
     }
 
     public Employee getManager() {
@@ -157,12 +157,12 @@ public class Employee implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TimeSheet> getTimeSheetCollection() {
-        return timeSheetCollection;
+    public List<TimeSheet> getTimeSheetList() {
+        return timeSheetList;
     }
 
-    public void setTimeSheetCollection(Collection<TimeSheet> timeSheetCollection) {
-        this.timeSheetCollection = timeSheetCollection;
+    public void setTimeSheetList(List<TimeSheet> timeSheetList) {
+        this.timeSheetList = timeSheetList;
     }
 
     @Override
