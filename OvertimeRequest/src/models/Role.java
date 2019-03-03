@@ -45,6 +45,18 @@ public class Role implements Serializable {
     public Role() {
     }
 
+    public Role(String id, Employee employee, Job job) {
+        this.id = id;
+        this.employee = employee;
+        this.job = job;
+    }
+
+    public Role(String id, Employee employee) {
+        this.id = id;
+        this.employee = employee;
+    }
+        
+
     public Role(String id) {
         this.id = id;
     }

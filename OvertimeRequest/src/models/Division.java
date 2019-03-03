@@ -45,6 +45,18 @@ public class Division implements Serializable {
     public Division() {
     }
 
+    public Division(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Division(String id, String name, List<Employee> employeeList) {
+        this.id = id;
+        this.name = name;
+        this.employeeList = employeeList;
+    }
+
+    
     public Division(String id) {
         this.id = id;
     }

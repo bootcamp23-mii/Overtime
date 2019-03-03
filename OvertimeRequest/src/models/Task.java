@@ -45,6 +45,18 @@ public class Task implements Serializable {
     public Task() {
     }
 
+    public Task(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Task(String id, String name, Overtime overtime) {
+        this.id = id;
+        this.name = name;
+        this.overtime = overtime;
+    }
+    
+
     public Task(String id) {
         this.id = id;
     }
