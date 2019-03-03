@@ -59,13 +59,13 @@ public class GeneralDAO {
         }
         return obj;
     }
-    
+
     public Object getById(Object ent, Object id) {
         Object obj = new Object();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            obj = session.createQuery("FROM "+ent.getClass().getSimpleName()+" WHERE id = '"+id+"'").uniqueResult();
+            obj = session.createQuery("FROM " + ent.getClass().getSimpleName() + " WHERE id = '" + id + "'").uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -75,7 +75,7 @@ public class GeneralDAO {
         return obj;
     }
 
-    public boolean saveordelete(Object ent, Boolean isSave) {
+    public boolean saveOrDelete(Object ent, Boolean isSave) {
         boolean result = false;
         session = this.factory.openSession();
         transaction = session.beginTransaction();

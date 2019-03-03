@@ -21,11 +21,11 @@ public class TestRun {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         GeneralDAO gdao = new GeneralDAO(factory);
 
-//          System.out.println( gdao.getById(new Division(), "D"));
+          System.out.println( gdao.getById(new Division(), "D01"));
 
-        for (Object object : gdao.getData(new Employee(), "")) {
-            Employee emp= (Employee) object;
-            System.out.println(emp.getName());
-        }
+//        for (Object object : gdao.getData(new Employee(), "")) {
+//            Employee emp= (Employee) object;
+//            System.out.println(emp.getName());
+//        }
     }
 }
