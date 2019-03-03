@@ -52,6 +52,13 @@ public class Site implements Serializable {
         this.id = id;
     }
 
+    public Site(String id, String name, String location) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+    }
+    
+
     public String getId() {
         return id;
     }
