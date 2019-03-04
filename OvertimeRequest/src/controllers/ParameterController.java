@@ -43,8 +43,8 @@ public class ParameterController {
         return "Maaf coba lagi";
     }
 
-    public Object getById(String id) {
-        return gdao.getById(new Parameter(), id);
+    public Parameter getById(String id) {
+        return (Parameter) gdao.getById(new Parameter(id), id);
     }
 
     public List<Object> getData(String key) {

@@ -41,8 +41,8 @@ public class SiteController {
         }
          return "Maaf coba lagi";
     }
-    public Object getById(String id) {
-        return gdao.getById(new Site(), id);
+    public Site getById(String id) {
+        return (Site) gdao.getById(new Site(id), id);
     }
 
     public List<Object> getData(String key) {
