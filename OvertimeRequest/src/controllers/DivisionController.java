@@ -22,7 +22,7 @@ public class DivisionController {
         gdao = new GeneralDAO(factory);
     }
 
-    public String insertOrUpdate(String id, String name ) {
+    public String insertOrUpdate(String id, String name) {
         if (gdao.saveOrDelete(new Division(id, name), true)) {
             return "Selamat Data berhasil simpan";
         }
@@ -43,11 +43,8 @@ public class DivisionController {
     public List<Object> getData(String keyword) {
         return gdao.getData(new Division(keyword), keyword);
     }
-    
-    public Division getById(String id){
+
+    public Division getById(String id) {
         return (Division) gdao.getById(new Division(id), id);
     }
-
-
-
 }
