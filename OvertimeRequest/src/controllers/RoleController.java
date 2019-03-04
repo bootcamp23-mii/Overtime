@@ -8,6 +8,7 @@ package controllers;
 import daos.GeneralDAO;
 import java.util.List;
 import models.Employee;
+import models.Job;
 import models.Role;
 import org.hibernate.SessionFactory;
 
@@ -20,10 +21,10 @@ public class RoleController {
 
     public RoleController(SessionFactory factory) {
         gdao=new GeneralDAO(factory);
-    }
+    } 
     
-    public String insertOrUpdate(String id, String name) {
-        if (gdao.saveOrDelete(new Role(id, new Employee(name)), true)) {
+    public String insertOrUpdate(String id, String name, String employee, String job) {
+        if (gdao.saveOrDelete(new Role(id, name, new Employee(name), new Job(job)), true)) {
             return "Selamat Data berhasil simpan";
         }
         return "Maaf Data gagal disimpan";
