@@ -27,15 +27,112 @@ public class OvertimeReviewView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        btAccept = new javax.swing.JButton();
+        btDecline = new javax.swing.JButton();
+        lblOvertimeReview = new javax.swing.JLabel();
+        lblMii = new javax.swing.JLabel();
+        panelReview = new java.awt.Panel();
+        MenuBar = new javax.swing.JMenuBar();
+        mnMenu = new javax.swing.JMenu();
+        miHome = new javax.swing.JMenu();
+        miReviewOvertime = new javax.swing.JMenu();
+        miSetting = new javax.swing.JMenu();
+        miAbout = new javax.swing.JMenu();
+        miLogOut = new javax.swing.JMenu();
+
+        setBackground(new java.awt.Color(199, 220, 236));
+
+        btAccept.setBackground(new java.awt.Color(128, 137, 149));
+        btAccept.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btAccept.setText("Accept");
+
+        btDecline.setBackground(new java.awt.Color(128, 137, 149));
+        btDecline.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btDecline.setText("Decline");
+
+        lblOvertimeReview.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
+        lblOvertimeReview.setText("Overtime Review");
+
+        lblMii.setFont(new java.awt.Font("Courier New", 2, 12)); // NOI18N
+        lblMii.setText("Mitra Integrasi Informatika");
+
+        panelReview.setForeground(new java.awt.Color(128, 137, 149));
+
+        javax.swing.GroupLayout panelReviewLayout = new javax.swing.GroupLayout(panelReview);
+        panelReview.setLayout(panelReviewLayout);
+        panelReviewLayout.setHorizontalGroup(
+            panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelReviewLayout.setVerticalGroup(
+            panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 323, Short.MAX_VALUE)
+        );
+
+        MenuBar.setForeground(new java.awt.Color(128, 137, 149));
+
+        mnMenu.setText("Menu");
+        mnMenu.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+
+        miHome.setText("Home");
+        miHome.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        mnMenu.add(miHome);
+
+        miReviewOvertime.setText("Review Overtime");
+        miReviewOvertime.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        mnMenu.add(miReviewOvertime);
+
+        miSetting.setText("Setting");
+        miSetting.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        mnMenu.add(miSetting);
+
+        miAbout.setText("About");
+        miAbout.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        mnMenu.add(miAbout);
+
+        miLogOut.setText("Log Out");
+        miLogOut.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        mnMenu.add(miLogOut);
+
+        MenuBar.add(mnMenu);
+
+        setJMenuBar(MenuBar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblMii)
+                            .addComponent(lblOvertimeReview))
+                        .addGap(0, 160, Short.MAX_VALUE))
+                    .addComponent(panelReview, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btAccept)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btDecline)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblOvertimeReview)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMii)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btAccept)
+                    .addComponent(btDecline))
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -43,5 +140,18 @@ public class OvertimeReviewView extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JButton btAccept;
+    private javax.swing.JButton btDecline;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblMii;
+    private javax.swing.JLabel lblOvertimeReview;
+    private javax.swing.JMenu miAbout;
+    private javax.swing.JMenu miHome;
+    private javax.swing.JMenu miLogOut;
+    private javax.swing.JMenu miReviewOvertime;
+    private javax.swing.JMenu miSetting;
+    private javax.swing.JMenu mnMenu;
+    private java.awt.Panel panelReview;
     // End of variables declaration//GEN-END:variables
 }
