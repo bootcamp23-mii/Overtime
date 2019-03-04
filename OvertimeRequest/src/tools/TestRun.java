@@ -6,6 +6,7 @@
 package tools;
 
 import controllers.DivisionController;
+import controllers.OvertimeController;
 import daos.GeneralDAO;
 import models.Division;
 import models.Employee;
@@ -21,8 +22,9 @@ public class TestRun {
 
         SessionFactory factory = HibernateUtil.getSessionFactory();
         GeneralDAO gdao = new GeneralDAO(factory);
+        OvertimeController oc= new OvertimeController(factory);
         DivisionController dc=new DivisionController(factory);
-        System.out.println( dc.getById("D01"));
+        System.out.println( oc.insert("o020", "2019-03-04", "180", "masuk kuliah", "1", "TS07"));
 //        System.out.println(dc.getAll());
 //        for (Object object : dc.getAll()) {
 //            Division division= (Division) object;

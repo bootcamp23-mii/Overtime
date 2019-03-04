@@ -30,11 +30,15 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id")})
 public class Role implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "ID")
     private String id;
+    @Column(name = "NAME")
+    private String name;
+
     @JoinColumn(name = "EMPLOYEE", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee employee;
@@ -44,18 +48,18 @@ public class Role implements Serializable {
 
     public Role() {
     }
-
+    
     public Role(String id, Employee employee, Job job) {
         this.id = id;
         this.employee = employee;
         this.job = job;
     }
-
+    
     public Role(String id, Employee employee) {
         this.id = id;
         this.employee = employee;
     }
-        
+       
 
     public Role(String id) {
         this.id = id;
@@ -108,6 +112,14 @@ public class Role implements Serializable {
     @Override
     public String toString() {
         return "models.Role[ id=" + id + " ]";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
 }
