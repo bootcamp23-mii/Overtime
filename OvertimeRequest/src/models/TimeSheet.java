@@ -6,6 +6,10 @@
 package models;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -60,6 +64,15 @@ public class TimeSheet implements Serializable {
     public TimeSheet(String id) {
         this.id = id;
     }
+
+    public TimeSheet(String id, Date timeSheetDate, String name, Employee employee) {
+        this.id = id;
+        this.timeSheetDate = timeSheetDate;
+        this.name = name;
+        this.employee = employee;
+    }
+    
+    
 
     public String getId() {
         return id;

@@ -48,6 +48,11 @@ public class Job implements Serializable {
     public Job(String id) {
         this.id = id;
     }
+    
+    public Job(String id, String position) {
+        this.id = id;
+        this.position = position;
+    }
 
     public String getId() {
         return id;
@@ -56,6 +61,8 @@ public class Job implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+    
+    
 
     public String getPosition() {
         return position;
