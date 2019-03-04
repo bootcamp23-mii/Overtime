@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.nio.channels.SeekableByteChannel;
 import java.util.List;
@@ -13,39 +14,46 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
-public class TaskController {
-    private GeneralDAO gdao;
+public class TaskController implements TaskControllerInterface{
+    private DAOInterface<Task> dao;
 
     public TaskController(SessionFactory factory) {
-        gdao=new GeneralDAO(factory);
+        dao = new GeneralDAO<>(factory, Task.class);
     }
-    
-    public String insertOrUpdate(String id, String name) {
-        if (gdao.saveOrDelete(new Task(id, name), true)) {
-            return "Selamat Data berhasil simpan";
+
+    @Override
+    public Task getByid(String id) {
+        return dao.getById(id);
+    }
+
+    @Override
+    public List<Task> getAll() {
+        return dao.getData("");
+    }
+
+    @Override
+    public List<Task> search(Object keyword) {
+        return dao.getData(keyword);
+    }
+
+    @Override
+    public String save(String id, String name) {
+        if (dao.saveOrDelete(new Task(id, name), true)) {
+            return "Save Data Success!";
+        } else {
+            return "Save Failed!";
         }
-        return "Maaf Data gagal disimpan";
     }
 
-    public String delete(String id) {
-        if (gdao.saveOrDelete(new Task(id), false)) {
-            return "Selamat Data berhasil dihapus";
+    @Override
+    public String delete(String id, String name) {
+        if (dao.saveOrDelete(new Task(id, name), false)) {
+            return "Delete Data Success!";
+        } else {
+            return "Delete Failed!";
         }
-        return "Maaf Data gagal dihapus";
-    }
-
-    public List<Object> getAll() {
-        return gdao.getData(new Task(), "");
-    }
-
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new Task(keyword), keyword);
-    }
-    
-    public Task getById(String id){
-        return (Task) gdao.getById(new Task(id), id);
     }
     
 }

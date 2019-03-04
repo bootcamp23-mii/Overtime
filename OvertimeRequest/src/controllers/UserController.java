@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.sql.Connection;
 import java.util.List;
@@ -15,37 +16,50 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author FES
+ * @author AdhityaWP
  */
-public class UserController {
-    private Connection connection;
-    private GeneralDAO udao;
+public class UserController implements UserControllerInterface{
+   private DAOInterface<Users> dao;
 
     public UserController(SessionFactory factory) {
-        udao = new GeneralDAO(factory);
+        dao = new GeneralDAO<>(factory, Users.class);
     }
     
    
-    
-    public String register(String username, String password, String employee) {
-       String x= BCrypt.hashpw(password, BCrypt.gensalt());
-        if (udao.saveOrDelete(new Users(username, x, new Employee(employee)), true)) {
-            return "Selamat Data berhasil simpan";
+
+    @Override
+    public Users getByid(String id) {
+        return dao.getById(id);
+    }
+
+    @Override
+    public List<Users> getAll() {
+        return dao.getData("");
+    }
+
+    @Override
+    public String save(String username, String password, String employee) {
+        String x= BCrypt.hashpw(password, BCrypt.gensalt());
+        if (dao.saveOrDelete(new Users(username, x, new Employee(employee)), true)) {
+            return "Data Succefully Saved";
         }
-        return "Maaf Data gagal disimpan";
+        return "Failed";
     }
-    
-   public Users getById(String id) {
-        return (Users) udao.getById(new Users(id), id);
+
+    @Override
+    public String delete(String username, String password, String employee) {
+        String x= BCrypt.hashpw(password, BCrypt.gensalt());
+        if (dao.saveOrDelete(new Users(username, x, new Employee(employee)), false)) {
+            return "Data Succefully Deleted";
+        }
+        return "Failed";
     }
-   
-   
-  
-   public String login(String username, String password){
-        Users a = (Users) udao.getById(new Users(username), username);
-        if (!a.equals(0))
-           if (BCrypt.checkpw(password, a.getPassword())) 
-                    return a.getEmployee().getId();
+
+    @Override
+    public String login(String username, String password) {
+        if (!dao.getById(new Users(username)).equals(0))
+           if (BCrypt.checkpw(password, dao.getById(new Users(username)).getPassword())) 
+                    return dao.getById(new Users(username)).getEmployee().getId();
         return "Gagal";
     }
    

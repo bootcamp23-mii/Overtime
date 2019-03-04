@@ -5,11 +5,14 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.Division;
 import models.Employee;
 import models.TimeSheet;
@@ -17,41 +20,57 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author Lusiana
+ * @author AdhityaWP
  */
-public class TimeSheetController {
+public class TimeSheetController implements TimeSheetControllerInterface{
     
-    private GeneralDAO gdao;
+    private DAOInterface<TimeSheet> dao;
 
     public TimeSheetController(SessionFactory factory) {
-        gdao = new GeneralDAO(factory);
+        dao = new GeneralDAO<>(factory, TimeSheet.class);
     }
 
-    public String insertOrUpdate(String id, String date, String name, String employee) throws ParseException {
-        Date a = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        if (gdao.saveOrDelete(new TimeSheet(id, a, name, new Employee(employee)), true)) {
-            return "Selamat Data berhasil simpan";
+    @Override
+    public TimeSheet getByid(String id) {
+        return dao.getById(id);
+    }
+
+    @Override
+    public List<TimeSheet> search(Object keyword) {
+        return dao.getData(keyword);
+    }
+
+    @Override
+    public String save(String id, String date, String name, String employee) {
+        Date a = null;
+        try {
+            a = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(TimeSheetController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Maaf Data gagal disimpan";
-    }
-
-    public String delete(String id) {
-        if (gdao.saveOrDelete(new TimeSheet(id), false)) {
-            return "Selamat Data berhasil dihapus";
+        if (dao.saveOrDelete(new TimeSheet(id, a, name, new Employee(employee)), true)) {
+            return "Save Data Success";
         }
-        return "Maaf Data gagal dihapus";
+        return "Save Failed";
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new TimeSheet(), "");
+    @Override
+    public String delete(String id, String date, String name, String employee) {
+        Date a = null;
+        try {
+            a = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(TimeSheetController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (dao.saveOrDelete(new TimeSheet(id, a, name, new Employee(employee)), false)) {
+            return "Delete Data Success";
+        }
+        return "Delete Failed";
     }
 
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new TimeSheet(keyword), keyword);
-    }
-    
-    public TimeSheet getById(String id){
-        return (TimeSheet) gdao.getById(new TimeSheet(), id);
+    @Override
+    public List<TimeSheet> getAll() {
+        return dao.getData("");
     }
 
 

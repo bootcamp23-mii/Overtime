@@ -5,8 +5,10 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.util.List;
+import javassist.compiler.ast.Keyword;
 import models.Site;
 import org.hibernate.SessionFactory;
 
@@ -14,43 +16,45 @@ import org.hibernate.SessionFactory;
  *
  * @author AdhityaWP
  */
-public class SiteController {
-    private GeneralDAO gdao;
+public class SiteController implements SiteControllerInterface {
 
-    public SiteController(SessionFactory sessionFactory) {
-        gdao = new GeneralDAO(sessionFactory);
-    }
-    
-    public String insert(String id, String name, String location){
-        if (gdao.saveOrDelete (new Site(id, name, location),true)) {
-             return " Selamat data berhasil disimpan";
-        }
-         return "Maaf coba lagi";
-    }
-    
-    public String update(String id, String name, String location){
-        if (gdao.saveOrDelete (new Site(id, name, location),true)) {
-             return " Selamat data berhasil diubah";
-        }
-         return "Maaf coba lagi";
-    }
-    
-    public String delete(String id, String name, String location){
-        if (gdao.saveOrDelete (new Site(id, name, location), false)) {
-             return "Data telah dihapus!";
-        }
-         return "Maaf coba lagi";
-    }
-    public Site getById(String id) {
-        return (Site) gdao.getById(new Site(id), id);
+    private DAOInterface<Site> dao;
+
+    public SiteController(SessionFactory factory) {
+        dao = new GeneralDAO<>(factory, Site.class);
     }
 
-    public List<Object> getData(String key) {
-        return gdao.getData(new Site(key), key);
+    @Override
+    public Site getByid(String id) {
+        return dao.getById(id);
     }
-    
-     public List<Object> getAll() {
-        return gdao.getData(new Site(), "");
+
+    @Override
+    public List<Site> getAll() {
+        return dao.getData("");
     }
-    
+
+    @Override
+    public List<Site> search(Object keyword) {
+        return dao.getData(keyword);
+    }
+
+    @Override
+    public String save(String id, String name, String location) {
+        if (dao.saveOrDelete(new Site(id, name, location), true)) {
+            return "Save Data Success!";
+        } else {
+            return "Save Failed!";
+        }
+    }
+
+    @Override
+    public String delete(String id, String name, String location) {
+        if (dao.saveOrDelete(new Site(id, name, location), false)) {
+            return "Delete Data Success!";
+        } else {
+            return "Delete Failed!";
+        }
+    }
+
 }

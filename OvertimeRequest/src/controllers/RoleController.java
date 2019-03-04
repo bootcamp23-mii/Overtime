@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.util.List;
 import models.Employee;
@@ -14,39 +15,47 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author milhamafemi
+ * @author AdhityaWP
  */
-public class RoleController {
-    private GeneralDAO gdao;
+public class RoleController implements RoleControllerInterface {
+
+    private DAOInterface<Role> dao;
 
     public RoleController(SessionFactory factory) {
-        gdao=new GeneralDAO(factory);
-    } 
-    
-    public String insertOrUpdate(String id, String name, String employee, String job) {
-        if (gdao.saveOrDelete(new Role(id, name, new Employee(name), new Job(job)), true)) {
-            return "Selamat Data berhasil simpan";
+        dao = new GeneralDAO<>(factory, Role.class);
+    }
+
+    @Override
+    public Role getByid(String id) {
+        return dao.getById(id);
+    }
+
+    @Override
+    public List<Role> search(Object keyword) {
+        return dao.getData(keyword);
+    }
+
+    @Override
+    public String save(String id, String name, String employee, String job) {
+        if (dao.saveOrDelete(new Role(id, name, new Employee(employee), new Job(job)), true)) {
+            return "Save Data Success!";
+        } else {
+            return "Save Failed!";
         }
-        return "Maaf Data gagal disimpan";
     }
 
-    public String delete(String id) {
-        if (gdao.saveOrDelete(new Role(id), false)) {
-            return "Selamat Data berhasil dihapus";
+    @Override
+    public String delete(String id, String name, String employee, String job) {
+        if (dao.saveOrDelete(new Role(id, name, new Employee(employee), new Job(job)), false)) {
+            return "Delete Data Success!";
+        } else {
+            return "Delete Failed!";
         }
-        return "Maaf Data gagal dihapus";
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new Role(), "");
+    @Override
+    public List<Role> getAll() {
+        return dao.getData("");
     }
 
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new Role(keyword), keyword);
-    }
-    
-    public Role getById(String id){
-        return (Role) gdao.getById(new Role(id), id);
-    }
-    
 }
