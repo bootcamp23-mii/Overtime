@@ -42,6 +42,7 @@ public class LoginView extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setTitle("Register");
+        setNormalBounds(new java.awt.Rectangle(0, 0, 120, 0));
         setVisible(true);
 
         pnLogin.setBackground(new java.awt.Color(199, 220, 236));

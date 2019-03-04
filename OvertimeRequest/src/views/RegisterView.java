@@ -57,6 +57,11 @@ public class RegisterView extends javax.swing.JInternalFrame {
 
         btRegister.setBackground(new java.awt.Color(128, 137, 149));
         btRegister.setText("Register");
+        btRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRegisterActionPerformed(evt);
+            }
+        });
 
         lblUsername.setText("Username");
 
@@ -154,6 +159,12 @@ public class RegisterView extends javax.swing.JInternalFrame {
     private void tfPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfPasswordActionPerformed
+
+    private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
+        // TODO add your handling code here:
+        MainView mv = new MainView();
+        mv.setVisible(true);
+    }//GEN-LAST:event_btRegisterActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

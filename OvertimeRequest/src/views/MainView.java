@@ -37,14 +37,6 @@ public class MainView extends javax.swing.JFrame {
         spMain.setVisible(false);
     }
     
-    private void visibleMain(){
-        btLogin.setVisible(true);
-        btRegister.setVisible(true);
-        lblTitle.setVisible(true);
-        lblSubTitle.setVisible(true);
-        spMain.setVisible(true);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,18 +47,22 @@ public class MainView extends javax.swing.JFrame {
     private void initComponents() {
 
         pnMain = new javax.swing.JPanel();
+        pnAtas = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         lblSubTitle = new javax.swing.JLabel();
         btLogin = new javax.swing.JButton();
+        MII = new javax.swing.JLabel();
         btRegister = new javax.swing.JButton();
         spMain = new javax.swing.JSeparator();
         lblOr = new javax.swing.JLabel();
-        MII = new javax.swing.JLabel();
+        pnMain2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(199, 220, 236));
 
         pnMain.setBackground(new java.awt.Color(199, 220, 236));
+
+        pnAtas.setBackground(new java.awt.Color(199, 220, 236));
 
         lblTitle.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
         lblTitle.setText("OVERTIME REQUEST");
@@ -83,6 +79,9 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        MII.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/MII.png"))); // NOI18N
+        MII.setText("jLabel1");
+
         btRegister.setBackground(new java.awt.Color(128, 137, 149));
         btRegister.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         btRegister.setText("Register");
@@ -94,63 +93,86 @@ public class MainView extends javax.swing.JFrame {
 
         lblOr.setText("OR");
 
-        MII.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/MII.png"))); // NOI18N
-        MII.setText("jLabel1");
+        javax.swing.GroupLayout pnAtasLayout = new javax.swing.GroupLayout(pnAtas);
+        pnAtas.setLayout(pnAtasLayout);
+        pnAtasLayout.setHorizontalGroup(
+            pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnAtasLayout.createSequentialGroup()
+                .addGroup(pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnAtasLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblSubTitle)
+                            .addGroup(pnAtasLayout.createSequentialGroup()
+                                .addComponent(lblTitle)
+                                .addGap(199, 199, 199)
+                                .addComponent(btLogin)
+                                .addGap(19, 19, 19)
+                                .addComponent(lblOr)
+                                .addGap(18, 18, 18)
+                                .addComponent(btRegister))
+                            .addComponent(spMain)))
+                    .addGroup(pnAtasLayout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(MII, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+        pnAtasLayout.setVerticalGroup(
+            pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnAtasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitle)
+                    .addComponent(btLogin)
+                    .addComponent(lblOr)
+                    .addComponent(btRegister))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSubTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(MII, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
         pnMain.setLayout(pnMainLayout);
         pnMainLayout.setHorizontalGroup(
             pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMainLayout.createSequentialGroup()
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnMainLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnMainLayout.createSequentialGroup()
-                                .addComponent(lblTitle)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(pnMainLayout.createSequentialGroup()
-                                .addComponent(lblSubTitle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 238, Short.MAX_VALUE)
-                                .addComponent(btLogin)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblOr)
-                                .addGap(18, 18, 18)
-                                .addComponent(btRegister))))
-                    .addComponent(spMain))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(MII, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135))
+            .addComponent(pnAtas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnMainLayout.setVerticalGroup(
             pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMainLayout.createSequentialGroup()
-                .addComponent(lblTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSubTitle)
-                    .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btRegister)
-                        .addComponent(btLogin)
-                        .addComponent(lblOr)))
-                .addGap(10, 10, 10)
-                .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(MII)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(pnAtas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnMain2Layout = new javax.swing.GroupLayout(pnMain2);
+        pnMain2.setLayout(pnMain2Layout);
+        pnMain2Layout.setHorizontalGroup(
+            pnMain2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 677, Short.MAX_VALUE)
+        );
+        pnMain2Layout.setVerticalGroup(
+            pnMain2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 514, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(pnMain2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(pnMain2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -158,17 +180,19 @@ public class MainView extends javax.swing.JFrame {
 
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         RegisterView rv = new RegisterView();
-        pnMain.add(rv);
+        pnMain.setVisible(false);
+        pnMain2.add(rv);
         rv.setVisible(true);
-        pnMain.setVisible(true);
-        rv.setFocusable(true);
+        rv.revalidate();
+        
     }//GEN-LAST:event_btRegisterActionPerformed
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
         ManagerMainView mmv = new ManagerMainView();
-        pnMain.add(mmv);
+        pnMain.setVisible(false);
+        pnMain2.add(mmv);
         mmv.setVisible(true);
-        pnMain.setVisible(true);
+        mmv.revalidate();
     }//GEN-LAST:event_btLoginActionPerformed
 
     /**
@@ -214,7 +238,9 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JLabel lblOr;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JPanel pnAtas;
     private javax.swing.JPanel pnMain;
+    private javax.swing.JPanel pnMain2;
     private javax.swing.JSeparator spMain;
     // End of variables declaration//GEN-END:variables
 }

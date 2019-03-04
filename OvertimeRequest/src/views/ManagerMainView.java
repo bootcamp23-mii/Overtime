@@ -5,17 +5,37 @@
  */
 package views;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author AdhityaWP
  */
 public class ManagerMainView extends javax.swing.JInternalFrame {
+    DefaultTableModel myTableModel = new DefaultTableModel();
 
     /**
      * Creates new form ManagerView
      */
     public ManagerMainView() {
         initComponents();
+    }
+    
+    private void tableData(List<models.TimeSheet> timesheet) {
+        Object[] columnNames = {"ID", "Time Sheet", "Name", "Employee"};
+        Object[][] data = new Object[timesheet.size()][columnNames.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i][0] = (i + 1);
+            data[i][1] = timesheet.get(i).getId();
+            data[i][2] = timesheet.get(i).getTimeSheetDate();
+            data[i][3] = timesheet.get(i).getName();
+            data[i][4] = timesheet.get(i).getEmployee().getName();
+
+        }
+        myTableModel = new DefaultTableModel(data, columnNames);
+        tbManager.setModel(myTableModel);
+        
     }
 
     /**
@@ -35,7 +55,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblNik = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
         spTableManager = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbManager = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -83,7 +103,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbManager.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -94,7 +114,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        spTableManager.setViewportView(jTable1);
+        spTableManager.setViewportView(tbManager);
 
         javax.swing.GroupLayout pnManagerMainLayout = new javax.swing.GroupLayout(pnManagerMain);
         pnManagerMain.setLayout(pnManagerMainLayout);
@@ -175,7 +195,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblNik;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;
@@ -185,5 +204,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnUser;
     private javax.swing.JSeparator spMain;
     private javax.swing.JScrollPane spTableManager;
+    private javax.swing.JTable tbManager;
     // End of variables declaration//GEN-END:variables
 }
