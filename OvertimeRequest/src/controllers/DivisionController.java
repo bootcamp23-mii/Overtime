@@ -44,8 +44,8 @@ public class DivisionController {
         return gdao.getData(new Division(keyword), keyword);
     }
     
-    public Object getById(String id){
-        return gdao.getById(new Division(), id);
+    public Division getById(String id){
+        return (Division) gdao.getById(new Division(id), id);
     }
 
 

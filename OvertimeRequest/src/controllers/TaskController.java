@@ -44,8 +44,8 @@ public class TaskController {
         return gdao.getData(new Task(keyword), keyword);
     }
     
-    public Object getById(String id){
-        return gdao.getById(new Task(), id);
+    public Task getById(String id){
+        return (Task) gdao.getById(new Task(id), id);
     }
     
 }

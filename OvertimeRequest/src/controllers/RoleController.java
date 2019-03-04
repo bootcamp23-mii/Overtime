@@ -45,8 +45,8 @@ public class RoleController {
         return gdao.getData(new Role(keyword), keyword);
     }
     
-    public Object getById(String id){
-        return gdao.getById(new Role(), id);
+    public Role getById(String id){
+        return (Role) gdao.getById(new Role(id), id);
     }
     
 }
