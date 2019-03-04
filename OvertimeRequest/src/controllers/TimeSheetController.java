@@ -28,7 +28,7 @@ public class TimeSheetController {
     }
 
     public String insertOrUpdate(String id, String date, String name, String employee) throws ParseException {
-        Date a = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(date);
+        Date a = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         if (gdao.saveOrDelete(new TimeSheet(id, a, name, new Employee(employee)), true)) {
             return "Selamat Data berhasil simpan";
         }
@@ -50,8 +50,8 @@ public class TimeSheetController {
         return gdao.getData(new TimeSheet(keyword), keyword);
     }
     
-    public String getById(String id){
-        return (String) gdao.getById(new TimeSheet(), id);
+    public TimeSheet getById(String id){
+        return (TimeSheet) gdao.getById(new TimeSheet(), id);
     }
 
 

@@ -47,8 +47,8 @@ public class JobController {
         return gdao.getData(new Job(keyword), keyword);
     }
     
-    public String getById(String id){
-        return (String) gdao.getById(new Job(), id);
+    public Job getById(String id){
+        return (Job) gdao.getById(new Job(), id);
     }
 
 

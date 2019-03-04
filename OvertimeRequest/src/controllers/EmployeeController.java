@@ -50,8 +50,8 @@ public class EmployeeController {
         return gdao.getData(new Employee(keyword), keyword);
     }
     
-    public String getById(String id){
-        return (String) gdao.getById(new Employee(), id);
+    public Employee getById(String id){
+        return (Employee) gdao.getById(new Employee(), id);
     }
 
 

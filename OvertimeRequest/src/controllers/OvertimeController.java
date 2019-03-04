@@ -64,8 +64,8 @@ public class OvertimeController {
          return "Maaf coba lagi";
     }
     
-    public Object getById(String id) {
-        return gdao.getById(new Overtime(), id);
+    public Overtime getById(String id) {
+        return (Overtime) gdao.getById(new Overtime(id), id);
     }
 
     public List<Object> getData(String key) {
