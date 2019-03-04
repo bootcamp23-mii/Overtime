@@ -35,8 +35,8 @@ public class JobController implements JobControllerInterface{
     }
 
     @Override
-    public String delete(String id) {
-        if (dao.saveOrDelete(new Job(id), false)) {
+    public String delete(String id, String position) {
+        if (dao.saveOrDelete(new Job(id, position), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";

@@ -16,7 +16,7 @@ public interface JobControllerInterface {
 
     public String insertOrUpdate(String id, String name);
 
-    public String delete(String id);
+    public String delete(String id, String position);
 
     public List<Job> getAll();
 

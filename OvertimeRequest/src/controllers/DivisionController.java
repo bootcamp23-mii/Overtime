@@ -32,8 +32,8 @@ public class DivisionController implements DivisionControllerInterface{
     }
 
     @Override
-    public String delete(String id) {
-        if (dao.saveOrDelete(new Division(id), false)) {
+    public String delete(String id, String name) {
+        if (dao.saveOrDelete(new Division(id, name), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";

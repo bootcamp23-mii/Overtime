@@ -15,7 +15,7 @@ import models.Division;
 public interface DivisionControllerInterface {
 
     public String insertOrUpdate(String id, String name);
-    public String delete(String id);
+    public String delete(String id,String name);
     public List<Division> getAll();
     public List<Division> getData(String keyword);
     public Division getById(String id);
