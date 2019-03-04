@@ -24,9 +24,9 @@ public class TestRun {
         SessionFactory factory = HibernateUtil.getSessionFactory();
 //        GeneralDAO gdao = new GeneralDAO(factory);
 //        OvertimeController oc= new OvertimeController(factory);
-//        DivisionController dc=new DivisionController(factory);
-        RoleController rc= new RoleController(factory);
-        System.out.println(rc.getById("R01").getId());
+        DivisionController dc=new DivisionController(factory);
+//        RoleController rc= new RoleController(factory);
+//        System.out.println(rc.getById("R01").getId());
 //        System.out.println( oc.insert("o020", "2019-03-04", "180", "masuk kuliah", "1", "TS07"));
 //        System.out.println(dc.getAll());
 //        for (Object object : dc.getAll()) {
@@ -42,9 +42,9 @@ public class TestRun {
 //            System.out.println(d.getName());
 //        }
         
-//        for (Object object : dc.getAll()) {
-//            Division d=(Division) object;
-//            System.out.println(d.getName());
-//        }
+        for (Object object : dc.getAll()) {
+            Division d=(Division) object;
+            System.out.println(d.getName());
+        }
     }
 }
