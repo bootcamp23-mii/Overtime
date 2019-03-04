@@ -74,6 +74,21 @@ public class GeneralDAO {
         }
         return obj;
     }
+    
+    public Object Login(Object ent, Object username) {
+        Object obj = new Object();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            obj = session.createQuery("FROM " + ent.getClass().getSimpleName() + " WHERE USERNAME = '" + username + "'").uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return obj;
+    }
 
     public boolean saveOrDelete(Object ent, Boolean isSave) {
         boolean result = false;
@@ -97,5 +112,7 @@ public class GeneralDAO {
         }
         return result;
     }
+    
+    
 
 }
