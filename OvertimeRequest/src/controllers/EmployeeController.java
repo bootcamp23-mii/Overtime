@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -20,41 +21,43 @@ import org.hibernate.SessionFactory;
  *
  * @author Lusiana
  */
-public class EmployeeController {
-    
-    private GeneralDAO gdao;
+public class EmployeeController implements EmployeeControllerInterface {
+
+    private DAOInterface<Employee> dao;
 
     public EmployeeController(SessionFactory factory) {
-        gdao = new GeneralDAO(factory);
+        dao = new GeneralDAO<>(factory, Employee.class);
     }
 
-    public String insertOrUpdate(String id, String name, String address, String email, String salary, String division, String manager, String site) throws ParseException {
-        if (gdao.saveOrDelete(new Employee(id, name, address, email, new BigInteger(salary), new Division(division), new Employee(manager), new Site(site)), true)) {
+    @Override
+    public String insertOrUpdate(String id, String name, String address, String email, String salary, String division, String manager, String site) {
+        if (dao.saveOrDelete(new Employee(id, name, address, email, new BigInteger(salary), new Division(division), new Employee(manager), new Site(site)), true)) {
             return "Selamat Data berhasil simpan";
         }
         return "Maaf Data gagal disimpan";
     }
 
+    @Override
     public String delete(String id) {
-        if (gdao.saveOrDelete(new Employee(id), false)) {
+        if (dao.saveOrDelete(new Employee(id), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new Employee(), "");
+    @Override
+    public List<Employee> getAll() {
+        return dao.getData("");
     }
 
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new Employee(keyword), keyword);
-    }
-    
-    public Employee getById(String id){
-        return (Employee) gdao.getById(new Employee(), id);
+    @Override
+    public List<Employee> getData(String keyword) {
+        return dao.getData(keyword);
     }
 
-
-
+    @Override
+    public Employee getById(String id) {
+        return dao.getById(id);
+    }
 
 }

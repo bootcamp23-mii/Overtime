@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.util.List;
 import models.Division;
@@ -14,37 +15,42 @@ import org.hibernate.SessionFactory;
  *
  * @author milhamafemi
  */
-public class DivisionController {
+public class DivisionController implements DivisionControllerInterface{
+    private DAOInterface<Division> dao;
 
-    private GeneralDAO gdao;
 
     public DivisionController(SessionFactory factory) {
-        gdao = new GeneralDAO(factory);
+        dao = new GeneralDAO<>(factory, Division.class);
     }
 
+    @Override
     public String insertOrUpdate(String id, String name) {
-        if (gdao.saveOrDelete(new Division(id, name), true)) {
+        if (dao.saveOrDelete(new Division(id, name), true)) {
             return "Selamat Data berhasil simpan";
         }
         return "Maaf Data gagal disimpan";
     }
 
+    @Override
     public String delete(String id) {
-        if (gdao.saveOrDelete(new Division(id), false)) {
+        if (dao.saveOrDelete(new Division(id), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new Division(), "");
+    @Override
+    public List<Division> getAll() {
+        return dao.getData("");
     }
 
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new Division(keyword), keyword);
+    @Override
+    public List<Division> getData(String keyword) {
+        return dao.getData(keyword);
     }
 
+    @Override
     public Division getById(String id) {
-        return (Division) gdao.getById(new Division(id), id);
+        return dao.getById(id);
     }
 }

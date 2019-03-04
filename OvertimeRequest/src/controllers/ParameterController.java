@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.util.List;
 import models.Parameter;
@@ -14,45 +15,51 @@ import org.hibernate.SessionFactory;
  *
  * @author AdhityaWP
  */
-public class ParameterController {
+public class ParameterController implements ParameterControllerInterface{
 
-    private GeneralDAO gdao;
+    private DAOInterface<Parameter> dao;
 
     public ParameterController(SessionFactory sessionFactory) {
-        gdao = new GeneralDAO(sessionFactory);
+        dao= new GeneralDAO<>(sessionFactory, Parameter.class);
     }
 
+    @Override
     public String insert(String id, String value, String keterangan) {
-        if (gdao.saveOrDelete(new Parameter(id, value, keterangan), true)) {
+        if (dao.saveOrDelete(new Parameter(id, value, keterangan), true)) {
             return " Selamat data berhasil disimpan";
         }
         return "Maaf coba lagi";
     }
 
+    @Override
     public String update(String id, String value, String keterangan) {
-        if (gdao.saveOrDelete(new Parameter(id, value, keterangan), true)) {
+        if (dao.saveOrDelete(new Parameter(id, value, keterangan), true)) {
             return " Selamat data berhasil disimpan";
         }
         return "Maaf coba lagi";
     }
 
+    @Override
     public String delete(String id, String value, String keterangan) {
-        if (gdao.saveOrDelete(new Parameter(id, value, keterangan), false)) {
+        if (dao.saveOrDelete(new Parameter(id, value, keterangan), false)) {
             return "Data telah dihapus!";
         }
         return "Maaf coba lagi";
     }
 
+    @Override
     public Parameter getById(String id) {
-        return (Parameter) gdao.getById(new Parameter(id), id);
+        return getById(id);
     }
 
-    public List<Object> getData(String key) {
-        return gdao.getData(new Parameter(key), key);
+    @Override
+    public List<Parameter> getData(String key) {
+        return dao.getData(key);
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new Parameter(), "");
+    @Override
+    public List<Parameter> getAll() {
+        return dao.getData("");
     }
 
 }

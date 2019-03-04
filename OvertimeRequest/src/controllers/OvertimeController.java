@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -18,18 +19,19 @@ import org.hibernate.SessionFactory;
  *
  * @author AdhityaWP
  */
-public class OvertimeController {
-    private GeneralDAO gdao;
+public class OvertimeController implements OvertimeControllerInterface{
+    private DAOInterface<Overtime> dao;
 
     public OvertimeController(SessionFactory sessionFactory) {
-        gdao = new GeneralDAO(sessionFactory);
+        dao= new GeneralDAO<>(sessionFactory, Overtime.class);
     }
     
+    @Override
     public String insert(String id, String overtimeDate , String timeDuration, String keterangan, String status, String timeSheet){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date Otdate = dateFormat.parse(overtimeDate);
-            if (gdao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
+            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
              return " Selamat data berhasil disimpan";
         }           
         } catch (Exception e) {
@@ -38,11 +40,12 @@ public class OvertimeController {
          return "Maaf coba lagi";
     }
     
+    @Override
     public String update(String id, String overtimeDate , String timeDuration, String keterangan, String status, String timeSheet){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date Otdate = dateFormat.parse(overtimeDate);
-            if (gdao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
+            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
              return " Selamat data berhasil diubah";
         }           
         } catch (Exception e) {
@@ -51,11 +54,12 @@ public class OvertimeController {
          return "Maaf coba lagi";
     }
     
+    @Override
     public String delete(String id, String overtimeDate , String timeDuration, String keterangan, String status, String timeSheet){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date Otdate = dateFormat.parse(overtimeDate);
-            if (gdao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),false)) {
+            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),false)) {
              return " Data telah dihapus!";
         }           
         } catch (Exception e) {
@@ -64,16 +68,19 @@ public class OvertimeController {
          return "Maaf coba lagi";
     }
     
+    @Override
     public Overtime getById(String id) {
-        return (Overtime) gdao.getById(new Overtime(id), id);
+        return dao.getById(id);
     }
 
-    public List<Object> getData(String key) {
-        return gdao.getData(new Overtime(key), key);
+    @Override
+    public List<Overtime> getData(String key) {
+        return dao.getData(key);
     }
     
-     public List<Object> getAll() {
-        return gdao.getData(new Overtime(), "");
+    @Override
+     public List<Overtime> getAll() {
+        return dao.getData("");
     }
     
     

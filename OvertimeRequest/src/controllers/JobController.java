@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.text.ParseException;
 import java.util.List;
@@ -17,38 +18,43 @@ import org.hibernate.SessionFactory;
  *
  * @author Lusiana
  */
-public class JobController {
+public class JobController implements JobControllerInterface{
     
-    private GeneralDAO gdao;
+    private DAOInterface<Job> dao;
 
     public JobController(SessionFactory factory) {
-        gdao = new GeneralDAO(factory);
+        dao= new GeneralDAO<>(factory, Job.class);
     }
 
-    public String insertOrUpdate(String id, String name) throws ParseException {
-        if (gdao.saveOrDelete(new Job(id, name), true)) {
+    @Override
+    public String insertOrUpdate(String id, String name){
+        if (dao.saveOrDelete(new Job(id, name), true)) {
             return "Selamat Data berhasil simpan";
         }
         return "Maaf Data gagal disimpan";
     }
 
+    @Override
     public String delete(String id) {
-        if (gdao.saveOrDelete(new Job(id), false)) {
+        if (dao.saveOrDelete(new Job(id), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";
     }
 
-    public List<Object> getAll() {
-        return gdao.getData(new Job(), "");
+    @Override
+    public List<Job> getAll() {
+        return dao.getData("");
     }
 
-    public List<Object> getData(String keyword) {
-        return gdao.getData(new Job(keyword), keyword);
+    @Override
+    public List<Job> getData(String keyword) {
+        return dao.getData(keyword);
     }
     
+    @Override
     public Job getById(String id){
-        return (Job) gdao.getById(new Job(), id);
+        return dao.getById(id);
     }
 
 
