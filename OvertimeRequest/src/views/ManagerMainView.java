@@ -5,37 +5,44 @@
  */
 package views;
 
+import controllers.OvertimeController;
+import controllers.OvertimeControllerInterface;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import models.Overtime;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 /**
  *
  * @author AdhityaWP
  */
 public class ManagerMainView extends javax.swing.JInternalFrame {
+
+    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTableModel = new DefaultTableModel();
+    OvertimeControllerInterface oci = new OvertimeController(sessionFactory);
 
     /**
      * Creates new form ManagerView
      */
     public ManagerMainView() {
         initComponents();
+        tableData(oci.getAll());
     }
-    
-    private void tableData(List<models.TimeSheet> timesheet) {
-        Object[] columnNames = {"ID", "Time Sheet", "Name", "Employee"};
-        Object[][] data = new Object[timesheet.size()][columnNames.length];
+
+    private void tableData(List<Overtime> overtime) {
+        Object[] columnNames = {"No", "ID", "Employee Name", "Overtime Date", "Overtime Count(hours)"};
+        Object[][] data = new Object[overtime.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-            data[i][1] = timesheet.get(i).getId();
-            data[i][2] = timesheet.get(i).getTimeSheetDate();
-            data[i][3] = timesheet.get(i).getName();
-            data[i][4] = timesheet.get(i).getEmployee().getName();
-
+            data[i][1] = overtime.get(i).getId();
+            data[i][2] = overtime.get(i).getTimeSheet().getEmployee().getName();
+            data[i][3] = overtime.get(i).getOvertimeDate();
+            data[i][4] = overtime.get(i).getTimeDuration();
         }
         myTableModel = new DefaultTableModel(data, columnNames);
         tbManager.setModel(myTableModel);
-        
     }
 
     /**
@@ -56,6 +63,10 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblUsername = new javax.swing.JLabel();
         spTableManager = new javax.swing.JScrollPane();
         tbManager = new javax.swing.JTable();
+        lblSearch = new javax.swing.JLabel();
+        tfSearch = new javax.swing.JTextField();
+        chbSearch = new javax.swing.JCheckBox();
+        btSearch = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -88,17 +99,21 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         pnUserLayout.setHorizontalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnUserLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                    .addComponent(lblNik, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnUserLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnUserLayout.createSequentialGroup()
+                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         pnUserLayout.setVerticalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnUserLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -116,11 +131,23 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         ));
         spTableManager.setViewportView(tbManager);
 
+        lblSearch.setText("Search");
+
+        chbSearch.setText("By Id");
+
+        btSearch.setText("Search!");
+        btSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSearchActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnManagerMainLayout = new javax.swing.GroupLayout(pnManagerMain);
         pnManagerMain.setLayout(pnManagerMainLayout);
         pnManagerMainLayout.setHorizontalGroup(
             pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnManagerMainLayout.createSequentialGroup()
+            .addComponent(spTableManager)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
                 .addContainerGap(97, Short.MAX_VALUE)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
@@ -130,11 +157,20 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                         .addGap(94, 94, 94))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
                         .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addContainerGap())))
             .addGroup(pnManagerMainLayout.createSequentialGroup()
-                .addComponent(spMain)
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spMain)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblSearch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(chbSearch)
+                        .addGap(18, 18, 18)
+                        .addComponent(btSearch)))
                 .addContainerGap())
-            .addComponent(spTableManager)
         );
         pnManagerMainLayout.setVerticalGroup(
             pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,10 +181,16 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                     .addComponent(lblTitle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(spTableManager, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSearch)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chbSearch)
+                    .addComponent(btSearch))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spTableManager, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -187,8 +229,27 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
+        String key = tfSearch.getText().toString();
+        boolean cb = chbSearch.isSelected();
+        if (!cb) {
+            tableData(oci.getData(key));
+        } else {
+//            Region tampungan = rc.getById(key);
+//            tfId.setText(tampungan.getId() + "");
+//            tfNama.setText(tampungan.getName());
+//            Object[] data = {1, tampungan.getId(), tampungan.getName()};
+//            Object[] columnNames = {"No", "Id", "Nama"};
+//            model = new DefaultTableModel(null, columnNames);
+//            tbRegion.setModel(model);
+//            model.addRow(data);
+        }
+    }//GEN-LAST:event_btSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btSearch;
+    private javax.swing.JCheckBox chbSearch;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -196,6 +257,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JLabel lblNik;
+    private javax.swing.JLabel lblSearch;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
@@ -205,5 +267,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator spMain;
     private javax.swing.JScrollPane spTableManager;
     private javax.swing.JTable tbManager;
+    private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
 }
