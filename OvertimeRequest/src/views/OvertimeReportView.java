@@ -10,7 +10,7 @@ package views;
  * @author milhamafemi
  */
 public class OvertimeReportView extends javax.swing.JInternalFrame {
-
+    MainView mv= new MainView();
     /**
      * Creates new form OvertimeReportView
      */
@@ -99,6 +99,11 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         btCancel.setBackground(new java.awt.Color(128, 137, 149));
         btCancel.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         btCancel.setText("Cancel");
+        btCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -185,6 +190,14 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private void tfNikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNikActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfNikActionPerformed
+
+    private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        EmployeeMainView emv= new EmployeeMainView();
+        this.getParent().add(emv);
+        emv.setVisible(true);
+    }//GEN-LAST:event_btCancelActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

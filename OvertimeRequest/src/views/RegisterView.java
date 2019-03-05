@@ -16,6 +16,7 @@ public class RegisterView extends javax.swing.JInternalFrame {
     /**
      * Creates new form RegisterView
      */
+     MainView mv = new MainView();
     public RegisterView() {
         initComponents();        
     }
@@ -33,14 +34,17 @@ public class RegisterView extends javax.swing.JInternalFrame {
         lblTitle = new javax.swing.JLabel();
         spMain = new javax.swing.JSeparator();
         lblSubTitle = new javax.swing.JLabel();
-        btRegister = new javax.swing.JButton();
+        btConfirmation = new javax.swing.JButton();
         lblUsername = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
         lblConfirmPass = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
-        tfPassword = new javax.swing.JTextField();
-        tfConfirmPass = new javax.swing.JTextField();
+        tfNewPassword = new javax.swing.JTextField();
+        tfConfirmNewPass = new javax.swing.JTextField();
         btCancel = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btPassword = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Register");
@@ -55,121 +59,149 @@ public class RegisterView extends javax.swing.JInternalFrame {
         lblSubTitle.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         lblSubTitle.setText("Mitra Integrasi Informatika");
 
-        btRegister.setBackground(new java.awt.Color(128, 137, 149));
-        btRegister.setText("Register");
-        btRegister.addActionListener(new java.awt.event.ActionListener() {
+        btConfirmation.setBackground(new java.awt.Color(128, 137, 149));
+        btConfirmation.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btConfirmation.setText("Confirm");
+        btConfirmation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRegisterActionPerformed(evt);
+                btConfirmationActionPerformed(evt);
             }
         });
 
+        lblUsername.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         lblUsername.setText("Username");
 
-        lblPassword.setText("Password");
+        lblPassword.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        lblPassword.setText("New Password");
 
+        lblConfirmPass.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         lblConfirmPass.setText("Confirm Password");
 
-        tfPassword.addActionListener(new java.awt.event.ActionListener() {
+        tfNewPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfPasswordActionPerformed(evt);
+                tfNewPasswordActionPerformed(evt);
             }
         });
 
         btCancel.setBackground(new java.awt.Color(128, 137, 149));
+        btCancel.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         btCancel.setText("Cancel");
+        btCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jLabel1.setText("Account Activation");
+
+        jLabel2.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        jLabel2.setText("Password");
 
         javax.swing.GroupLayout pnRegisterLayout = new javax.swing.GroupLayout(pnRegister);
         pnRegister.setLayout(pnRegisterLayout);
         pnRegisterLayout.setHorizontalGroup(
             pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegisterLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
                 .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitle)
-                    .addComponent(lblSubTitle))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnRegisterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(spMain)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegisterLayout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
-                .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnRegisterLayout.createSequentialGroup()
-                        .addComponent(btRegister)
-                        .addGap(18, 18, 18)
-                        .addComponent(btCancel))
-                    .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnRegisterLayout.createSequentialGroup()
-                            .addComponent(lblConfirmPass)
-                            .addGap(18, 18, 18)
-                            .addComponent(tfConfirmPass))
-                        .addGroup(pnRegisterLayout.createSequentialGroup()
-                            .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblUsername)
-                                .addComponent(lblPassword))
-                            .addGap(55, 55, 55)
-                            .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tfUsername)
-                                .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(49, 49, 49))
+                        .addGap(22, 22, 22)
+                        .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTitle)
+                            .addComponent(lblSubTitle)))
+                    .addGroup(pnRegisterLayout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnRegisterLayout.createSequentialGroup()
+                                .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblUsername)
+                                    .addComponent(lblPassword)
+                                    .addComponent(lblConfirmPass)
+                                    .addComponent(jLabel2))
+                                .addGap(25, 25, 25)
+                                .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegisterLayout.createSequentialGroup()
+                                        .addComponent(btConfirmation, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tfConfirmNewPass)
+                                    .addComponent(tfUsername)
+                                    .addComponent(tfNewPassword)
+                                    .addComponent(btPassword))))))
+                .addContainerGap(53, Short.MAX_VALUE))
+            .addComponent(spMain, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         pnRegisterLayout.setVerticalGroup(
             pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegisterLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblSubTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
                 .addGap(30, 30, 30)
                 .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
-                    .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblConfirmPass)
-                    .addComponent(tfConfirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(tfConfirmNewPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addGroup(pnRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btRegister)
+                    .addComponent(btConfirmation)
                     .addComponent(btCancel))
-                .addGap(30, 30, 30))
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnRegister, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnRegister, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPasswordActionPerformed
+    private void tfNewPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNewPasswordActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfPasswordActionPerformed
+    }//GEN-LAST:event_tfNewPasswordActionPerformed
 
-    private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
+    private void btConfirmationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmationActionPerformed
         // TODO add your handling code here:
-        MainView mv = new MainView();
+       
         mv.setVisible(true);
-    }//GEN-LAST:event_btRegisterActionPerformed
+    }//GEN-LAST:event_btConfirmationActionPerformed
+
+    private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
+        // TODO add your handling code here:
+        mv.setVisible(true);
+    }//GEN-LAST:event_btCancelActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
-    private javax.swing.JButton btRegister;
+    private javax.swing.JButton btConfirmation;
+    private javax.swing.JTextField btPassword;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblConfirmPass;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblSubTitle;
@@ -177,8 +209,8 @@ public class RegisterView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblUsername;
     private javax.swing.JPanel pnRegister;
     private javax.swing.JSeparator spMain;
-    private javax.swing.JTextField tfConfirmPass;
-    private javax.swing.JTextField tfPassword;
+    private javax.swing.JTextField tfConfirmNewPass;
+    private javax.swing.JTextField tfNewPassword;
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }
