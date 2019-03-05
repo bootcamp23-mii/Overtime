@@ -5,6 +5,8 @@
  */
 package views;
 
+import controllers.EmployeeController;
+import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
 import java.sql.Connection;
@@ -16,7 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Employee;
 import models.Overtime;
+import models.Sessions;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -38,18 +42,23 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTableModel = new DefaultTableModel();
     OvertimeControllerInterface oci = new OvertimeController(sessionFactory);
+    EmployeeControllerInterface eci = new EmployeeController(sessionFactory);
 
     JasperReport JasRep;
     JasperPrint JasPri;
     Map param = new HashMap();
     JasperDesign JasDes;
     Connection c;
+    String id = Sessions.getId();
 
     /**
      * Creates new form ManagerView
      */
     public ManagerMainView() {
         initComponents();
+        Employee u = eci.getById(id);
+        lblNik.setText(u.getId());
+        lblUsername.setText(u.getName());
         tableData(oci.getAll());
     }
 
