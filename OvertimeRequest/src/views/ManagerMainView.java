@@ -7,11 +7,26 @@ package views;
 
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Overtime;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import tools.HibernateUtil;
 
 /**
@@ -24,6 +39,12 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     DefaultTableModel myTableModel = new DefaultTableModel();
     OvertimeControllerInterface oci = new OvertimeController(sessionFactory);
 
+    JasperReport JasRep;
+    JasperPrint JasPri;
+    Map param = new HashMap();
+    JasperDesign JasDes;
+    Connection c;
+
     /**
      * Creates new form ManagerView
      */
@@ -33,7 +54,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     }
 
     private void tableData(List<Overtime> overtime) {
-        Object[] columnNames = {"No", "ID", "Employee Name", "Overtime Date", "Overtime Count(hours)"};
+        Object[] columnNames = {"No", "ID Overtime", "Employee Name", "Overtime Date", "Duration(hours)", "Keterangan", "TimeSheet", "Status"};
         Object[][] data = new Object[overtime.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
@@ -41,6 +62,9 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             data[i][2] = overtime.get(i).getTimeSheet().getEmployee().getName();
             data[i][3] = overtime.get(i).getOvertimeDate();
             data[i][4] = overtime.get(i).getTimeDuration();
+            data[i][5] = overtime.get(i).getKeterangan();
+            data[i][6] = overtime.get(i).getTimeSheet().getId();
+            data[i][7] = overtime.get(i).getStatus();
         }
         myTableModel = new DefaultTableModel(data, columnNames);
         tbManager.setModel(myTableModel);
@@ -77,6 +101,13 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblName = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
         lblCount = new javax.swing.JLabel();
+        btPrint = new javax.swing.JButton();
+        lblTimeSheet = new javax.swing.JLabel();
+        tfImeSheet = new javax.swing.JTextField();
+        tfStatus = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        tfKeterangan = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -108,15 +139,12 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         pnUser.setLayout(pnUserLayout);
         pnUserLayout.setHorizontalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnUserLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnUserLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnUserLayout.createSequentialGroup()
-                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnUserLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblNik, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                .addGap(87, 87, 87))
         );
         pnUserLayout.setVerticalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,19 +193,70 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             }
         });
 
-        lblId.setText("Id");
+        lblId.setText("Id OT");
 
         lblName.setText("Name");
 
         lblDate.setText("Date");
 
-        lblCount.setText("Count");
+        lblCount.setText("Duration");
+
+        btPrint.setText("Print Report");
+        btPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPrintActionPerformed(evt);
+            }
+        });
+
+        lblTimeSheet.setText("TimeSheet");
+
+        jLabel1.setText("Status");
+
+        jLabel2.setText("Keterangan");
 
         javax.swing.GroupLayout pnManagerMainLayout = new javax.swing.GroupLayout(pnManagerMain);
         pnManagerMain.setLayout(pnManagerMainLayout);
         pnManagerMainLayout.setHorizontalGroup(
             pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spTableManager)
+            .addGroup(pnManagerMainLayout.createSequentialGroup()
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spMain)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblDate)
+                                    .addComponent(lblCount)
+                                    .addComponent(lblName)
+                                    .addComponent(lblId))
+                                .addGap(32, 32, 32)
+                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tfDate, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                                    .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfId, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfCount))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblTimeSheet)
+                                            .addComponent(jLabel1))
+                                        .addGap(6, 6, 6))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfKeterangan, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(tfStatus, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tfImeSheet, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btApprove))
+                                .addGap(30, 30, 30)
+                                .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                .addComponent(btPrint)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
                 .addContainerGap(97, Short.MAX_VALUE)
                 .addComponent(lblTitle)
@@ -186,44 +265,17 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 .addGap(94, 94, 94))
             .addGroup(pnManagerMainLayout.createSequentialGroup()
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spMain)
+                    .addComponent(spTableManager)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(chbSearch)
-                        .addGap(18, 18, 18)
-                        .addComponent(btSearch)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnManagerMainLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDate)
-                            .addComponent(lblCount))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                                .addComponent(lblId)
-                                .addGap(35, 35, 35))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                                .addComponent(lblName)
-                                .addGap(18, 18, 18)))))
-                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tfId, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnManagerMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btApprove))
-                    .addComponent(tfDate, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfCount, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfName))
-                .addGap(201, 201, 201)
-                .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSearch)
+                            .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(chbSearch)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btSearch)))))
                 .addContainerGap())
         );
         pnManagerMainLayout.setVerticalGroup(
@@ -237,14 +289,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnManagerMainLayout.createSequentialGroup()
-                        .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblSearch)
-                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chbSearch)
-                            .addComponent(btSearch)))
                     .addGroup(pnManagerMainLayout.createSequentialGroup()
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -260,13 +304,33 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCount))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btApprove)
-                        .addGap(0, 39, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblCount)))
+                    .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblTimeSheet)
+                            .addComponent(tfImeSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfKeterangan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addComponent(btApprove)))
+                .addGap(35, 35, 35)
+                .addComponent(lblSearch)
+                .addGap(7, 7, 7)
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chbSearch)
+                    .addComponent(btSearch)
+                    .addComponent(btPrint))
+                .addGap(18, 18, 18)
                 .addComponent(spTableManager, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         miManager.setText("MENU");
@@ -326,20 +390,62 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         tfName.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 2).toString());
         tfDate.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 3).toString());
         tfCount.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 4).toString());
-        
+        tfKeterangan.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 5).toString());
+        tfImeSheet.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 6).toString());
+        tfStatus.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 7).toString());
+
+        tfId.setEnabled(false);
         btApprove.setEnabled(true);
     }//GEN-LAST:event_tbManagerMouseClicked
 
     private void btApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApproveActionPerformed
-       int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Approve this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-       
+        int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Approve this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (reply == JOptionPane.YES_OPTION) {
+            String id = tfId.getText();
+            String date = tfDate.getText();
+            String duration = tfCount.getText();
+            String keterangan = tfKeterangan.getText();
+            String timesheet = tfImeSheet.getText();
+            String status = tfStatus.getText();
+            if (status.equals("0")) {
+                oci.update(id, date, duration, keterangan, "1", timesheet);
+                JOptionPane.showMessageDialog(null, "Success for approve!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Request has been approve!");
+            }
+            tableData(oci.getAll());
+
+        }
     }//GEN-LAST:event_btApproveActionPerformed
+
+    private void btPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintActionPerformed
+        try {
+            c = sessionFactory.
+                    getSessionFactoryOptions().getServiceRegistry().
+                    getService(ConnectionProvider.class).getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerMainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            String fileName = "./src/reports/report1.jrxml";
+            String filetoFill = "./src/reports/report1.jasper";
+            JasperCompileManager.compileReport(fileName);
+            JasPri = JasperFillManager.fillReport(filetoFill, param, c);
+            JasperViewer.viewReport(JasPri, false);
+
+        } catch (JRException ex) {
+            System.out.println(ex.toString());
+        }
+    }//GEN-LAST:event_btPrintActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btApprove;
+    private javax.swing.JButton btPrint;
     private javax.swing.JButton btSearch;
     private javax.swing.JCheckBox chbSearch;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -353,6 +459,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblNik;
     private javax.swing.JLabel lblSearch;
     private javax.swing.JLabel lblSubTitle;
+    private javax.swing.JLabel lblTimeSheet;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JMenu miManager;
@@ -364,7 +471,10 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField tfCount;
     private javax.swing.JTextField tfDate;
     private javax.swing.JTextField tfId;
+    private javax.swing.JTextField tfImeSheet;
+    private javax.swing.JTextField tfKeterangan;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfSearch;
+    private javax.swing.JTextField tfStatus;
     // End of variables declaration//GEN-END:variables
 }
