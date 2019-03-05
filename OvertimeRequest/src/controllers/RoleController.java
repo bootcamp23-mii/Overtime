@@ -43,6 +43,14 @@ public class RoleController implements RoleControllerInterface {
             return "Save Failed!";
         }
     }
+    
+    @Override
+    public String saveRoleId(String id){
+        if (dao.saveOrDelete(new Role(id), true)) {
+            return "Save Data Success!";
+        }
+        return "Save Failed!";
+    }
 
     @Override
     public String delete(String id, String name, String employee, String job) {

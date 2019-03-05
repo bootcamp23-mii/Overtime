@@ -18,5 +18,5 @@ public interface RoleControllerInterface {
     public List<Role> search(Object keyword);
     public String save(String id, String name, String employee, String job);
     public String delete(String id, String name, String employee, String job);
-    
+    public String saveRoleId(String id);
 }

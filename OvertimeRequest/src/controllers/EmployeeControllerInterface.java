@@ -16,7 +16,7 @@ public interface EmployeeControllerInterface {
 
     public String insertOrUpdate(String id, String name, String address, String email, String salary, String division, String manager, String site);
 
-    public String delete(String id);
+    public String delete(String id, String name, String address, String email, String salary, String division, String manager, String site);
 
     public List<Employee> getAll();
 

@@ -96,6 +96,14 @@ public class Role implements Serializable {
     public void setJob(Job job) {
         this.job = job;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public int hashCode() {
@@ -122,12 +130,5 @@ public class Role implements Serializable {
         return "models.Role[ id=" + id + " ]";
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     
 }
