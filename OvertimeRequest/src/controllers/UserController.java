@@ -39,12 +39,12 @@ public class UserController implements UserControllerInterface{
     }
 
     @Override
-    public String save(String username, String password, String employee) {
+    public boolean save(String username, String password, String employee) {
         String x= BCrypt.hashpw(password, BCrypt.gensalt());
         if (dao.saveOrDelete(new Users(username, x, new Employee(employee)), true)) {
-            return "Data Succefully Saved";
+            return true;
         }
-        return "Failed";
+        return false;
     }
 
     @Override

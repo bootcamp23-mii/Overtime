@@ -6,8 +6,11 @@
 package views;
 
 import controllers.EmployeeController;
+import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
+import controllers.OvertimeControllerInterface;
 import controllers.TimeSheetController;
+import controllers.TimeSheetControllerInterface;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import models.Employee;
@@ -30,10 +33,10 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     
     SessionFactory factory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTable = new DefaultTableModel();
-    OvertimeController oc = new OvertimeController(factory);
+    OvertimeControllerInterface oc = new OvertimeController(factory);
     String id = Sessions.getId();
-    TimeSheetController tc = new TimeSheetController(factory);
-    EmployeeController ec = new EmployeeController(factory);
+    TimeSheetControllerInterface tc = new TimeSheetController(factory);
+    EmployeeControllerInterface ec = new EmployeeController(factory);
     public EmployeeMainView() {
         initComponents();
         List a = ec.getById(id).getTimeSheetList();
@@ -149,11 +152,16 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbEmployeeMouseClicked(evt);
+            }
+        });
         spTableManager.setViewportView(tbEmployee);
 
         pnManagerMain.add(spTableManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 250, 630, 130));
 
-        btReport.setText("Report Overtime");
+        btReport.setText("Request Overtime");
         btReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btReportActionPerformed(evt);
@@ -194,6 +202,18 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         this.getParent().add(op);
         op.setVisible(true);
     }//GEN-LAST:event_btReportActionPerformed
+
+    private void tbEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEmployeeMouseClicked
+        // TODO add your handling code here:
+        if (tbEmployee.getSelectedColumnCount() == 1) {
+            int row = tbEmployee.getSelectedRow();
+            Sessions.setIdtab(tbEmployee.getValueAt(row, 1).toString());
+            this.setVisible(false);
+            OvertimeReportView op = new OvertimeReportView();
+            this.getParent().add(op);
+            op.setVisible(true);
+        }
+    }//GEN-LAST:event_tbEmployeeMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

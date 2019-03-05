@@ -15,7 +15,7 @@ import models.Users;
 public interface UserControllerInterface {
     public Users getByid(String id);
     public List<Users> getAll();
-    public String save(String username, String password, String employee);
+    public boolean save(String username, String password, String employee);
     public boolean login(String username, String password);
     public String delete(String username, String password, String employee);
     

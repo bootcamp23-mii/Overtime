@@ -10,7 +10,9 @@ package models;
  * @author Lusiana
  */
 public class Sessions {
+
     private static String id;
+    private static String idtab = "";
 
     public Sessions() {
     }
@@ -22,6 +24,13 @@ public class Sessions {
     public static void setId(String id) {
         Sessions.id = id;
     }
-    
-}
 
+    public static String getIdtab() {
+        return idtab;
+    }
+
+    public static void setIdtab(String idtab) {
+        Sessions.idtab = idtab;
+    }
+
+}

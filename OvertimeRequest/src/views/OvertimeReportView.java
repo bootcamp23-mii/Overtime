@@ -5,17 +5,49 @@
  */
 package views;
 
+import controllers.EmployeeController;
+import controllers.EmployeeControllerInterface;
+import controllers.OvertimeController;
+import controllers.OvertimeControllerInterface;
+import controllers.TimeSheetController;
+import controllers.TimeSheetControllerInterface;
+import models.Employee;
+import models.Overtime;
+import models.Sessions;
+import models.TimeSheet;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
+
 /**
  *
  * @author milhamafemi
  */
 public class OvertimeReportView extends javax.swing.JInternalFrame {
-    MainView mv= new MainView();
+
     /**
      * Creates new form OvertimeReportView
      */
+    SessionFactory factory = HibernateUtil.getSessionFactory();
+    OvertimeControllerInterface oc = new OvertimeController(factory);
+    String id = Sessions.getId();
+    String idtab = Sessions.getIdtab();
+    TimeSheetControllerInterface tc = new TimeSheetController(factory);
+    EmployeeControllerInterface ec = new EmployeeController(factory);
+
     public OvertimeReportView() {
         initComponents();
+        setData(idtab);
+    }
+
+    public void setData(String idTabel) {
+        if (idTabel != "") {
+            Employee e = ec.getById(id);
+            tfNik.setText(id);
+            tfName.setText(e.getName());
+            tfTimeDuration.setText((tc.getByid(idtab).getOvertimeList().get(0).getTimeDuration()).toString());
+            tfDate.setText((tc.getByid(idtab).getOvertimeList().get(0).getOvertimeDate()).toString());
+            taDetail.setText(tc.getByid(idtab).getOvertimeList().get(0).getKeterangan());
+        }
     }
 
     /**
@@ -39,12 +71,13 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         tfNik = new javax.swing.JTextField();
         tfName = new javax.swing.JTextField();
         tfTimeDuration = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        tfDate = new javax.swing.JTextField();
         tfTask = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         taDetail = new javax.swing.JTextArea();
         btSubmit = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(199, 220, 236));
 
@@ -83,7 +116,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
         tfTimeDuration.setCaretColor(new java.awt.Color(128, 137, 149));
 
-        jTextField4.setForeground(new java.awt.Color(128, 137, 149));
+        tfDate.setForeground(new java.awt.Color(128, 137, 149));
 
         tfTask.setForeground(new java.awt.Color(128, 137, 149));
 
@@ -99,11 +132,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         btCancel.setBackground(new java.awt.Color(128, 137, 149));
         btCancel.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         btCancel.setText("Cancel");
-        btCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCancelActionPerformed(evt);
-            }
-        });
+
+        jButton1.setText("Upload File");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,28 +149,29 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                             .addComponent(jLabel1))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btSubmit)
                                 .addGap(3, 3, 3)
                                 .addComponent(btCancel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8))
-                                .addGap(14, 14, 14)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField4)
-                                    .addComponent(tfTask)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(tfNik, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfName)
-                                    .addComponent(tfTimeDuration))))
+                            .addComponent(tfDate, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfTask, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(tfNik, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfTimeDuration, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(36, 36, 36)))
                 .addContainerGap())
         );
@@ -167,7 +198,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                     .addComponent(tfTimeDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -180,7 +211,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSubmit)
-                    .addComponent(btCancel))
+                    .addComponent(btCancel)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -191,18 +223,11 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfNikActionPerformed
 
-    private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-        EmployeeMainView emv= new EmployeeMainView();
-        this.getParent().add(emv);
-        emv.setVisible(true);
-    }//GEN-LAST:event_btCancelActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btSubmit;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -213,8 +238,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextArea taDetail;
+    private javax.swing.JTextField tfDate;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfNik;
     private javax.swing.JTextField tfTask;

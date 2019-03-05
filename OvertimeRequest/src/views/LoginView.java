@@ -16,6 +16,7 @@ import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Employee;
+import models.Sessions;
 import org.hibernate.SessionFactory;
 import tools.HibernateUtil;
 
@@ -24,18 +25,19 @@ import tools.HibernateUtil;
  * @author AdhityaWP
  */
 public class LoginView extends javax.swing.JInternalFrame {
-    
+
     SessionFactory factory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTable = new DefaultTableModel();
     UserControllerInterface uc = new UserController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
+
     /**
      * Creates new form RegisterView
      */
     public LoginView() {
-        initComponents();        
+        initComponents();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -164,8 +166,8 @@ public class LoginView extends javax.swing.JInternalFrame {
         this.hide();
         MainView mv = new MainView();
         mv.setVisible(true);
-        
-        
+
+
     }//GEN-LAST:event_btCancelActionPerformed
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
@@ -177,10 +179,21 @@ public class LoginView extends javax.swing.JInternalFrame {
         if ((uc.login(tfUsername.getText(), pass))) {
             JOptionPane.showMessageDialog(null, "Login Sukses.");
             this.setVisible(false);
+            String u = ec.getById(Sessions.getId()).getRoleList().get(0).getJob().getId();
+            if (u.equals("J01")) {
+                ManagerMainView mv = new ManagerMainView();
+                this.getParent().add(mv);
+                mv.setVisible(true);
+            } else if (u.equals("J02")) {
+                EmployeeMainView ev = new EmployeeMainView();
+                this.getParent().add(ev);
+                ev.setVisible(true);
+            } else {
+                AdminView av = new AdminView();
+                this.getParent().add(av);
+                av.setVisible(true);
+            }
 //            Employee u = ec.getById(Sessions.getId());
-            EmployeeMainView ev = new EmployeeMainView();
-            this.getParent().add(ev);
-            ev.setVisible(true);
         } else {
             tfUsername.setText("");
             tfPassword.setText("");
