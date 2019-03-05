@@ -53,8 +53,6 @@ public class Users implements Serializable {
         this.username = username;
         this.password = password;
     }
-    
-    
 
     public Users(String username, String password, Employee employee) {
         this.username = username;
@@ -87,6 +85,7 @@ public class Users implements Serializable {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
+    
 
     @Override
     public int hashCode() {

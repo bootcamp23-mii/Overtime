@@ -10,6 +10,7 @@ import daos.GeneralDAO;
 import java.sql.Connection;
 import java.util.List;
 import models.Employee;
+import models.Sessions;
 import models.Users;
 import tools.BCrypt;
 import org.hibernate.SessionFactory;
@@ -56,11 +57,16 @@ public class UserController implements UserControllerInterface{
     }
 
     @Override
-    public String login(String username, String password) {
-        if (!dao.getById(new Users(username)).equals(0))
-           if (BCrypt.checkpw(password, dao.getById(new Users(username)).getPassword())) 
-                    return dao.getById(new Users(username)).getEmployee().getId();
-        return "Gagal";
+    public boolean login(String username, String password) {
+        List<Users> list = dao.login(username);
+        if (!list.isEmpty())
+            for (Users obj : list){
+                if (BCrypt.checkpw(password, obj.getPassword()))
+                    Sessions.setId(obj.getEmployee().getId());
+                    return true;
+            }
+           
+        return false;
     }
    
     

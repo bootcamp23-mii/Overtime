@@ -8,6 +8,7 @@ package tools;
 import controllers.DivisionController;
 import controllers.OvertimeController;
 import controllers.RoleController;
+import controllers.UserController;
 import daos.GeneralDAO;
 import models.Division;
 import models.Employee;
@@ -40,11 +41,14 @@ public class TestRun {
 //        for (Object object : gdao.getData(new Division(), "")) {
 //            Division d= (Division) object;
 //            System.out.println(d.getName());
+
+            UserController uc = new UserController(factory);
+            System.out.println(uc.login("alien", "alien"));
 //        }
         
-        for (Object object : dc.getAll()) {
-            Division d=(Division) object;
-            System.out.println(d.getName());
-        }
+//        for (Object object : dc.getAll()) {
+//            Division d=(Division) object;
+//            System.out.println(d.getName());
+//        }
     }
 }

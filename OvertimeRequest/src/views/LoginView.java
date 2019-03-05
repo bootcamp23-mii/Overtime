@@ -5,14 +5,30 @@
  */
 package views;
 
+import controllers.EmployeeController;
+import controllers.EmployeeControllerInterface;
+import controllers.OvertimeController;
+import controllers.TimeSheetController;
+import controllers.UserController;
+import controllers.UserControllerInterface;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Employee;
+import org.hibernate.SessionFactory;
+import tools.HibernateUtil;
 
 /**
  *
  * @author AdhityaWP
  */
 public class LoginView extends javax.swing.JInternalFrame {
+    
+    SessionFactory factory = HibernateUtil.getSessionFactory();
+    DefaultTableModel myTable = new DefaultTableModel();
+    UserControllerInterface uc = new UserController(factory);
+    EmployeeControllerInterface ec = new EmployeeController(factory);
     /**
      * Creates new form RegisterView
      */
@@ -37,8 +53,8 @@ public class LoginView extends javax.swing.JInternalFrame {
         lblUsername = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
-        tfPassword = new javax.swing.JTextField();
         btCancel = new javax.swing.JButton();
+        tfPassword = new javax.swing.JPasswordField();
 
         setClosable(true);
         setTitle("Register");
@@ -56,30 +72,28 @@ public class LoginView extends javax.swing.JInternalFrame {
 
         btLogin.setBackground(new java.awt.Color(128, 137, 149));
         btLogin.setText("Login");
+        btLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLoginActionPerformed(evt);
+            }
+        });
 
         lblUsername.setText("Username");
 
         lblPassword.setText("Password");
 
-        tfPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfPasswordActionPerformed(evt);
-            }
-        });
-
         btCancel.setBackground(new java.awt.Color(128, 137, 149));
         btCancel.setText("Cancel");
+        btCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnLoginLayout = new javax.swing.GroupLayout(pnLogin);
         pnLogin.setLayout(pnLoginLayout);
         pnLoginLayout.setHorizontalGroup(
             pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnLoginLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitle)
-                    .addComponent(lblSubTitle))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnLoginLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(spMain)
@@ -97,16 +111,22 @@ public class LoginView extends javax.swing.JInternalFrame {
                             .addComponent(lblPassword))
                         .addGap(55, 55, 55)
                         .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tfUsername)
-                            .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .addComponent(tfPassword))))
                 .addGap(49, 49, 49))
+            .addGroup(pnLoginLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitle)
+                    .addComponent(lblSubTitle))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         pnLoginLayout.setVerticalGroup(
             pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnLoginLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(lblSubTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -115,10 +135,10 @@ public class LoginView extends javax.swing.JInternalFrame {
                     .addComponent(lblUsername)
                     .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPassword)
                     .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                .addGap(44, 44, 44)
                 .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btLogin)
                     .addComponent(btCancel))
@@ -139,9 +159,34 @@ public class LoginView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPasswordActionPerformed
+    private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfPasswordActionPerformed
+        this.hide();
+        MainView mv = new MainView();
+        mv.setVisible(true);
+        
+        
+    }//GEN-LAST:event_btCancelActionPerformed
+
+    private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
+        // TODO add your handling code here:
+        String pass = "";
+        for (char c : tfPassword.getPassword()) {
+            pass += c;
+        }
+        if ((uc.login(tfUsername.getText(), pass))) {
+            JOptionPane.showMessageDialog(null, "Login Sukses.");
+            this.setVisible(false);
+//            Employee u = ec.getById(Sessions.getId());
+            EmployeeMainView ev = new EmployeeMainView();
+            this.getParent().add(ev);
+            ev.setVisible(true);
+        } else {
+            tfUsername.setText("");
+            tfPassword.setText("");
+            JOptionPane.showMessageDialog(null, "Username atau Password salah.");
+        }
+    }//GEN-LAST:event_btLoginActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -153,7 +198,7 @@ public class LoginView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblUsername;
     private javax.swing.JPanel pnLogin;
     private javax.swing.JSeparator spMain;
-    private javax.swing.JTextField tfPassword;
+    private javax.swing.JPasswordField tfPassword;
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }
