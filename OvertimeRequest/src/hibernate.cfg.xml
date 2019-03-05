@@ -59,5 +59,6 @@ Contributor(s):
     <mapping class="models.Site"/>
     <mapping class="models.Task"/>
     <mapping class="models.TimeSheet"/>
+    <mapping class="models.Users"/>
   </session-factory>
 </hibernate-configuration>

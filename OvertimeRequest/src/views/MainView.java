@@ -7,6 +7,7 @@ package views;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import models.Employee;
 
 /**
  *
@@ -132,7 +133,7 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MII, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
@@ -143,11 +144,15 @@ public class MainView extends javax.swing.JFrame {
         );
         pnMainLayout.setVerticalGroup(
             pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnAtas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+            .addComponent(pnAtas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pnMain2.setEnabled(false);
+        pnMain2.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnMain2ComponentHidden(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnMain2Layout = new javax.swing.GroupLayout(pnMain2);
         pnMain2.setLayout(pnMain2Layout);
@@ -188,12 +193,18 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_btRegisterActionPerformed
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
-        ManagerMainView mmv = new ManagerMainView();
+//        ManagerMainView mmv = new ManagerMainView();
+        LoginView mmv = new LoginView();
         pnMain.setVisible(false);
         pnMain2.add(mmv);
         mmv.setVisible(true);
         mmv.revalidate();
     }//GEN-LAST:event_btLoginActionPerformed
+
+    private void pnMain2ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnMain2ComponentHidden
+        // TODO add your handling code here
+        
+    }//GEN-LAST:event_pnMain2ComponentHidden
 
     /**
      * @param args the command line arguments

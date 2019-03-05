@@ -109,12 +109,13 @@ public class GeneralDAO<T> implements DAOInterface<T> {
         return result;
     }
 
-    public Object Login(Object ent, Object username) {
-        Object obj = new Object();
+    @Override
+    public List<T> login(Object username) {
+        List <T> obj = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            obj = session.createQuery("FROM " + ent.getClass().getSimpleName() + " WHERE USERNAME = '" + username + "'").uniqueResult();
+            obj = session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE USERNAME = '" + username + "'").list();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {

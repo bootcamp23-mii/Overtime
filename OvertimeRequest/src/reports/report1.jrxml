@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8ae8788-c42f-4ada-a9cf-bc2937f9fcc1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     OVERTIME."ID" AS OVERTIME_ID,
+     OVERTIME."OVERTIME_DATE" AS OVERTIME_OVERTIME_DATE,
+     OVERTIME."TIME_DURATION" AS OVERTIME_TIME_DURATION,
+     OVERTIME."KETERANGAN" AS OVERTIME_KETERANGAN,
+     OVERTIME."TIME_SHEET" AS OVERTIME_TIME_SHEET,
+     OVERTIME."STATUS" AS OVERTIME_STATUS,
+     OVERTIME."PROOF" AS OVERTIME_PROOF,
+     EMPLOYEE."ID" AS EMPLOYEE_ID,
+     EMPLOYEE."NAME" AS EMPLOYEE_NAME,
+     EMPLOYEE."ADDRESS" AS EMPLOYEE_ADDRESS,
+     EMPLOYEE."EMAIL" AS EMPLOYEE_EMAIL,
+     EMPLOYEE."MANAGER" AS EMPLOYEE_MANAGER,
+     EMPLOYEE."SALARY" AS EMPLOYEE_SALARY,
+     EMPLOYEE."SITE" AS EMPLOYEE_SITE,
+     EMPLOYEE."DIVISION" AS EMPLOYEE_DIVISION,
+     TIME_SHEET."ID" AS TIME_SHEET_ID,
+     TIME_SHEET."TIME_SHEET_DATE" AS TIME_SHEET_TIME_SHEET_DATE,
+     TIME_SHEET."NAME" AS TIME_SHEET_NAME,
+     TIME_SHEET."EMPLOYEE" AS TIME_SHEET_EMPLOYEE
+FROM
+     "ADMIN"."EMPLOYEE" EMPLOYEE INNER JOIN "ADMIN"."TIME_SHEET" TIME_SHEET ON EMPLOYEE."ID" = TIME_SHEET."EMPLOYEE"
+     INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET"
+WHERE  OVERTIME."STATUS" = '1']]>
+	</queryString>
+	<field name="EMPLOYEE_ID" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="OVERTIME_OVERTIME_DATE" class="java.sql.Timestamp"/>
+	<field name="OVERTIME_TIME_DURATION" class="java.math.BigDecimal"/>
+	<field name="OVERTIME_KETERANGAN" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="160" height="20" uuid="2fed98bd-6a13-42a0-9d08-c09f1fc0337c"/>
+				<text><![CDATA[EMPLOYEE_ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="160" height="20" uuid="96ac1b2d-7b6e-4e22-b461-11d091bfb22f"/>
+				<text><![CDATA[EMPLOYEE_NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="160" height="20" uuid="765b141b-52a4-4097-a52d-bfa85d696d16"/>
+				<text><![CDATA[OVERTIME_OVERTIME_DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="160" height="20" uuid="c25c1f9f-a28c-4ecd-a79d-da0664eb6aca"/>
+				<text><![CDATA[OVERTIME_TIME_DURATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="640" y="0" width="160" height="20" uuid="745118f1-4048-4df3-a9ae-3f7593d5d006"/>
+				<text><![CDATA[OVERTIME_KETERANGAN]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="20" uuid="d736be94-e3df-4d0e-98c2-c800475279a7"/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="160" height="20" uuid="c26801aa-e085-49d1-949f-39f48533314b"/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="160" height="20" uuid="c4d4b342-fff6-437e-bd40-d8da85e96fc9"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_OVERTIME_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="160" height="20" uuid="8d174e9c-eaa8-4460-aa70-5349a3d6a24d"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_TIME_DURATION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="160" height="20" uuid="6ac6cae5-98d1-4d21-be37-c51ff1d6fcc8"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_KETERANGAN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

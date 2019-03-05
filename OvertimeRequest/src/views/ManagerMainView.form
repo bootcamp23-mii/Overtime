@@ -82,7 +82,58 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="spTableManager" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="spMain" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblDate" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblCount" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblName" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblId" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="tfDate" pref="135" max="32767" attributes="0"/>
+                                      <Component id="tfName" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tfId" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tfCount" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="lblTimeSheet" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="tfKeterangan" alignment="1" min="-2" pref="145" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="1" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="tfStatus" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="tfImeSheet" alignment="0" min="-2" pref="145" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="btApprove" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                  <Component id="pnUser" min="-2" pref="151" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="btPrint" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="97" max="32767" attributes="0"/>
                   <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
@@ -90,58 +141,23 @@
                   <Component id="lblSubTitle" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
               </Group>
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="spMain" max="32767" attributes="0"/>
+                      <Component id="spTableManager" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="lblSearch" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="tfSearch" min="-2" pref="214" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="chbSearch" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="btSearch" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="1" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblDate" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCount" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lblId" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lblName" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSearch" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="tfSearch" min="-2" pref="214" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="chbSearch" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btSearch" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="tfId" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="btApprove" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="tfDate" alignment="0" max="32767" attributes="0"/>
-                      <Component id="tfCount" alignment="0" max="32767" attributes="0"/>
-                      <Component id="tfName" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="201" max="-2" attributes="0"/>
-                  <Component id="pnUser" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -158,17 +174,7 @@
                   <Component id="spMain" min="-2" pref="11" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="pnUser" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tfSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="chbSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tfId" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblId" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -188,14 +194,39 @@
                               <Component id="tfCount" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblCount" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="pnUser" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblTimeSheet" min="-2" max="-2" attributes="0"/>
+                              <Component id="tfImeSheet" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tfStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tfKeterangan" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="btApprove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="lblSearch" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tfSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="chbSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btPrint" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="spTableManager" min="-2" pref="185" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -229,18 +260,13 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="lblNik" min="-2" pref="208" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblUsername" min="-2" pref="208" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblNik" max="32767" attributes="0"/>
+                          <Component id="lblUsername" pref="121" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -335,7 +361,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblId">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Id"/>
+            <Property name="text" type="java.lang.String" value="Id OT"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblName">
@@ -350,8 +376,37 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblCount">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Count"/>
+            <Property name="text" type="java.lang.String" value="Duration"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btPrint">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print Report"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btPrintActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTimeSheet">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="TimeSheet"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfImeSheet">
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfStatus">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Status"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Keterangan"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfKeterangan">
         </Component>
       </SubComponents>
     </Container>
