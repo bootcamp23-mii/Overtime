@@ -5,12 +5,16 @@
  */
 package views;
 
+import controllers.DivisionController;
+import controllers.DivisionControllerInterface;
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
 import controllers.RoleController;
 import controllers.RoleControllerInterface;
+import controllers.SiteController;
+import controllers.SiteControllerInterface;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -27,13 +31,16 @@ import tools.HibernateUtil;
  * @author milhamafemi
  */
 public class AdminView extends javax.swing.JInternalFrame {
-    
+
     private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private DefaultTableModel myTableModel = new DefaultTableModel();
+    private DefaultTableModel tableModelRole = new DefaultTableModel();
+    private DefaultTableModel tableModelEmp = new DefaultTableModel();
     private OvertimeControllerInterface oci = new OvertimeController(sessionFactory);
     private RoleControllerInterface rci = new RoleController(sessionFactory);
     private EmployeeControllerInterface eci = new EmployeeController(sessionFactory);
     private List<Site> sites = new ArrayList<>();
+    private DivisionControllerInterface dci= new DivisionController(sessionFactory);
+    private SiteControllerInterface sci= new SiteController(sessionFactory);
     private List<Division> divisions = new ArrayList<>();
     private List<Employee> employees = new ArrayList<>();
 
@@ -42,13 +49,12 @@ public class AdminView extends javax.swing.JInternalFrame {
      */
     public AdminView() {
         initComponents();
-        tableData(rci.getAll());
-        tableDataEmp(eci.getAll());
-        showDivision();
-        showSite();
+        tableDataRole(rci.getAll());
+        panelNewUser.setVisible(false);
+        panelRole.setVisible(true);
     }
-    
-    private void tableData(List<Role> role) {
+
+    private void tableDataRole(List<Role> role) {
         Object[] columnNames = {"No", "ID", "Employee Name", "Job", "Role"};
         Object[][] data = new Object[role.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
@@ -58,12 +64,12 @@ public class AdminView extends javax.swing.JInternalFrame {
             data[i][3] = role.get(i).getJob().getPosition();
             data[i][4] = role.get(i).getName();
         }
-        myTableModel = new DefaultTableModel(data, columnNames);
-        tbUser.setModel(myTableModel);
+        tableModelRole = new DefaultTableModel(data, columnNames);
+        tbUser.setModel(tableModelRole);
     }
-    
+
     private void tableDataEmp(List<Employee> emp) {
-        Object[] columnNames = {"No", "ID", "Name", "Address", "Email", "Manager id", "Salary",};
+        Object[] columnNames = {"No", "ID", "Name", "Address", "Email", "Manager id", "Salary", "Site", "Division"};
         Object[][] data = new Object[emp.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
@@ -74,25 +80,25 @@ public class AdminView extends javax.swing.JInternalFrame {
             data[i][5] = emp.get(i).getManager();
             data[i][6] = emp.get(i).getSalary();
             if (emp.get(i).getSite().getName() != null) {
-                data[i][7] = emp.get(i).getSite().getName();
+                data[i][7] = emp.get(i).getSite().getName() + "";
             } else {
                 data[i][7] = "";
             }
             if (emp.get(i).getDivision().getName() != null) {
-                data[i][8] = emp.get(i).getDivision().getName();
+                data[i][8] = emp.get(i).getDivision().getName() + "";
             } else {
                 data[i][8] = "";
             }
-            
+
         }
-        myTableModel = new DefaultTableModel(data, columnNames);
-        tbUser.setModel(myTableModel);
+        tableModelEmp = new DefaultTableModel(data, columnNames);
+        tbEmp.setModel(tableModelEmp);
     }
-    
+
     private boolean isEmpty() {
         return eci.getData(tfEmpId.getText()).isEmpty();
     }
-    
+
     private void setComboBox() {
         for (Site site : sites) {
             cbSite.addItem(site.getId() + " - " + site.getName());
@@ -101,7 +107,7 @@ public class AdminView extends javax.swing.JInternalFrame {
             cbDivision.addItem(division.getId() + " - " + division.getName());
         }
     }
-    
+
     private void showSite() {
         for (Employee employee : employees) {
             if (!sites.contains(employee.getSite())) {
@@ -110,7 +116,7 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         }
     }
-    
+
     private void showDivision() {
         for (Employee employee : employees) {
             if (!divisions.contains(employee.getDivision())) {
@@ -118,7 +124,7 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         }
     }
-    
+
     private boolean confirmation() {
         if (tfEmpId.getText().equals("")
                 || tfEmpName.getText().equals("")
@@ -143,8 +149,26 @@ public class AdminView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panelRole = new javax.swing.JPanel();
+        tfJob = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        tfName = new javax.swing.JTextField();
+        tfId = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        lblSearch = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        btClear = new javax.swing.JButton();
+        scrlUser = new javax.swing.JScrollPane();
+        tbUser = new javax.swing.JTable();
+        tfSearch = new javax.swing.JTextField();
+        btDelete = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        btFind = new javax.swing.JButton();
+        btSave = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        tfRole = new javax.swing.JTextField();
         panelNewUser = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scrlEmp = new javax.swing.JScrollPane();
         tbEmp = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -167,33 +191,183 @@ public class AdminView extends javax.swing.JInternalFrame {
         btDeleteEmp = new javax.swing.JButton();
         btSearchEmp = new javax.swing.JButton();
         tfSearchEmp = new javax.swing.JTextField();
-        tfRole = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        btFind = new javax.swing.JButton();
-        btSave = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        btDelete = new javax.swing.JButton();
-        tfSearch = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tbUser = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        btClear = new javax.swing.JButton();
-        lblSearch = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        tfId = new javax.swing.JTextField();
-        tfName = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        tfJob = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        miHome = new javax.swing.JMenuItem();
         miInsertUser = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        miAbout = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
 
-        jScrollPane2.addMouseListener(new java.awt.event.MouseAdapter() {
+        setBackground(new java.awt.Color(199, 220, 236));
+
+        panelRole.setBackground(new java.awt.Color(199, 220, 236));
+
+        tfJob.setEditable(false);
+
+        jLabel1.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        jLabel1.setText("Id");
+
+        tfName.setEditable(false);
+
+        jLabel4.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        jLabel4.setText("Role");
+
+        lblSearch.setFont(new java.awt.Font("Courier New", 1, 11)); // NOI18N
+        lblSearch.setText("Search User");
+
+        jLabel3.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        jLabel3.setText("Job");
+
+        btClear.setBackground(new java.awt.Color(128, 137, 149));
+        btClear.setText("Clear");
+        btClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btClearActionPerformed(evt);
+            }
+        });
+
+        tbUser.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Id", "Name", "Job", "Role"
+            }
+        ));
+        tbUser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jScrollPane2MouseClicked(evt);
+                tbUserMouseClicked(evt);
+            }
+        });
+        scrlUser.setViewportView(tbUser);
+
+        btDelete.setBackground(new java.awt.Color(128, 137, 149));
+        btDelete.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btDelete.setText("Delete");
+        btDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDeleteActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        jLabel2.setText("Name");
+
+        btFind.setBackground(new java.awt.Color(128, 137, 149));
+        btFind.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btFind.setText("Find");
+        btFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFindActionPerformed(evt);
+            }
+        });
+
+        btSave.setBackground(new java.awt.Color(128, 137, 149));
+        btSave.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        btSave.setText("Save");
+        btSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
+        jLabel5.setText("User Access Setting");
+
+        tfRole.setEditable(false);
+
+        javax.swing.GroupLayout panelRoleLayout = new javax.swing.GroupLayout(panelRole);
+        panelRole.setLayout(panelRoleLayout);
+        panelRoleLayout.setHorizontalGroup(
+            panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 631, Short.MAX_VALUE)
+            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelRoleLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(scrlUser, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelRoleLayout.createSequentialGroup()
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblSearch)
+                                .addComponent(jLabel5))
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(panelRoleLayout.createSequentialGroup()
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4))
+                            .addGap(18, 18, 18)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelRoleLayout.createSequentialGroup()
+                                    .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tfRole)
+                                .addComponent(tfJob)
+                                .addComponent(tfName)
+                                .addComponent(tfId)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                            .addGap(4, 4, 4)
+                            .addComponent(tfSearch)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btFind, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addContainerGap()))
+        );
+        panelRoleLayout.setVerticalGroup(
+            panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 357, Short.MAX_VALUE)
+            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelRoleLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(scrlUser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(panelRoleLayout.createSequentialGroup()
+                            .addComponent(jLabel5)
+                            .addGap(18, 18, 18)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfJob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btSave)
+                                .addComponent(btDelete))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblSearch)
+                            .addGap(9, 9, 9)
+                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btFind))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btClear)
+                            .addGap(0, 83, Short.MAX_VALUE)))
+                    .addContainerGap()))
+        );
+
+        panelNewUser.setBackground(new java.awt.Color(199, 220, 236));
+        panelNewUser.setForeground(new java.awt.Color(199, 220, 236));
+
+        scrlEmp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                scrlEmpMouseClicked(evt);
             }
         });
 
@@ -213,22 +387,30 @@ public class AdminView extends javax.swing.JInternalFrame {
                 tbEmpMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(tbEmp);
+        scrlEmp.setViewportView(tbEmp);
 
+        jLabel6.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel6.setText("Id");
 
+        jLabel7.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel7.setText("Name");
 
+        jLabel8.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel8.setText("Address");
 
+        jLabel9.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel9.setText("E-mail");
 
+        jLabel10.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel10.setText("Manager Id");
 
+        jLabel11.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel11.setText("Salary");
 
+        jLabel12.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel12.setText("Site");
 
+        jLabel13.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jLabel13.setText("Division");
 
         tfEmpMail.addActionListener(new java.awt.event.ActionListener() {
@@ -237,6 +419,8 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(128, 137, 149));
+        jButton1.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         jButton1.setText("Save");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,6 +428,8 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         });
 
+        btClearEmp.setBackground(new java.awt.Color(128, 137, 149));
+        btClearEmp.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         btClearEmp.setText("Clear");
         btClearEmp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,6 +437,8 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         });
 
+        btDeleteEmp.setBackground(new java.awt.Color(128, 137, 149));
+        btDeleteEmp.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         btDeleteEmp.setText("Delete");
         btDeleteEmp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,6 +446,8 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         });
 
+        btSearchEmp.setBackground(new java.awt.Color(128, 137, 149));
+        btSearchEmp.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         btSearchEmp.setText("Search");
         btSearchEmp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,7 +462,7 @@ public class AdminView extends javax.swing.JInternalFrame {
             .addGroup(panelNewUserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(scrlEmp)
                     .addGroup(panelNewUserLayout.createSequentialGroup()
                         .addGroup(panelNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(tfEmpSal, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,7 +505,7 @@ public class AdminView extends javax.swing.JInternalFrame {
                                     .addGroup(panelNewUserLayout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btClearEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 164, Short.MAX_VALUE))
+                        .addGap(0, 145, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelNewUserLayout.createSequentialGroup()
                         .addGap(330, 330, 330)
                         .addComponent(tfSearchEmp)
@@ -370,93 +560,19 @@ public class AdminView extends javax.swing.JInternalFrame {
                                     .addComponent(btDeleteEmp)
                                     .addComponent(btClearEmp))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrlEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        setBackground(new java.awt.Color(199, 220, 236));
-
-        tfRole.setEditable(false);
-
-        jLabel5.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
-        jLabel5.setText("User Access Setting");
-
-        btFind.setBackground(new java.awt.Color(128, 137, 149));
-        btFind.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        btFind.setText("Find");
-        btFind.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFindActionPerformed(evt);
-            }
-        });
-
-        btSave.setBackground(new java.awt.Color(128, 137, 149));
-        btSave.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        btSave.setText("Save");
-        btSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSaveActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        jLabel2.setText("Name");
-
-        btDelete.setBackground(new java.awt.Color(128, 137, 149));
-        btDelete.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        btDelete.setText("Delete");
-        btDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btDeleteActionPerformed(evt);
-            }
-        });
-
-        tbUser.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "No", "Id", "Name", "Job", "Role"
-            }
-        ));
-        tbUser.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbUserMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tbUser);
-
-        jLabel3.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        jLabel3.setText("Job");
-
-        btClear.setBackground(new java.awt.Color(128, 137, 149));
-        btClear.setText("Clear");
-        btClear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btClearActionPerformed(evt);
-            }
-        });
-
-        lblSearch.setFont(new java.awt.Font("Courier New", 1, 11)); // NOI18N
-        lblSearch.setText("Search User");
-
-        jLabel4.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        jLabel4.setText("Role");
-
-        tfName.setEditable(false);
-
-        jLabel1.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
-        jLabel1.setText("Id");
-
-        tfJob.setEditable(false);
-
         jMenu1.setText("Menu");
 
-        jMenuItem2.setText("Home");
-        jMenu1.add(jMenuItem2);
+        miHome.setText("Home");
+        miHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miHomeActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miHome);
 
         miInsertUser.setText("Insert New User");
         miInsertUser.addActionListener(new java.awt.event.ActionListener() {
@@ -466,8 +582,13 @@ public class AdminView extends javax.swing.JInternalFrame {
         });
         jMenu1.add(miInsertUser);
 
-        jMenuItem3.setText("About");
-        jMenu1.add(jMenuItem3);
+        miAbout.setText("About");
+        miAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAboutActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miAbout);
 
         jMenuItem4.setText("Log Out");
         jMenu1.add(jMenuItem4);
@@ -481,78 +602,26 @@ public class AdminView extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblSearch)
-                            .addComponent(jLabel5))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tfRole)
-                            .addComponent(tfJob)
-                            .addComponent(tfName)
-                            .addComponent(tfId)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(tfSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btFind, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))))
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panelRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(panelNewUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfJob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btSave)
-                            .addComponent(btDelete))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblSearch)
-                        .addGap(9, 9, 9)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btFind))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btClear)
-                        .addGap(0, 83, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panelRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(panelNewUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
@@ -560,7 +629,7 @@ public class AdminView extends javax.swing.JInternalFrame {
 
     private void btFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFindActionPerformed
         String key = tfSearch.getText();
-        tableData(rci.search(key));
+        tableDataRole(rci.search(key));
     }//GEN-LAST:event_btFindActionPerformed
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
@@ -575,7 +644,7 @@ public class AdminView extends javax.swing.JInternalFrame {
                 if (reply == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, rci.saveRoleId(tfId.getText()));
                     tfSearch.setText("");
-                    tableData(rci.getAll());
+                    tableDataRole(rci.getAll());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -605,12 +674,20 @@ public class AdminView extends javax.swing.JInternalFrame {
         tfRole.setText("");
         tfSearch.setText("");
         tfId.setEnabled(true);
-        
-        tableData(rci.getAll());
+        tableDataRole(rci.getAll());
     }//GEN-LAST:event_btClearActionPerformed
 
     private void miInsertUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miInsertUserActionPerformed
         // TODO add your handling code here:
+
+        panelRole.setVisible(false);
+        panelNewUser.setVisible(true);
+        tableDataEmp(eci.getAll());
+        showDivision();
+        showSite();
+        setComboBox();
+
+
     }//GEN-LAST:event_miInsertUserActionPerformed
 
     private void tfEmpMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEmpMailActionPerformed
@@ -621,7 +698,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         clear();
     }//GEN-LAST:event_btClearEmpActionPerformed
-    
+
     public void clear() {
         tfEmpAdrress.setText("");
         tfEmpId.setText("");
@@ -659,25 +736,11 @@ public class AdminView extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jScrollPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseClicked
+    private void scrlEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scrlEmpMouseClicked
         // TODO add your handling code here:
-        tfEmpId.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 1).toString());
-        tfEmpName.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 2).toString());
-        tfEmpAdrress.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 3).toString());
-        tfEmpMail.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 4).toString());
-        tfEmpManagerId.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 5).toString());
-        tfEmpSal.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 6).toString());
-        for (int i = 0; i < cbSite.getItemCount(); i++) {
-            if (cbSite.getItemAt(i).split(" - ")[0].equals(tbEmp.getValueAt(tbEmp.getSelectedRow(), 7).toString())) {
-                cbSite.setSelectedIndex(i);
-            }
-        }
-        for (int i = 0; i < cbDivision.getItemCount(); i++) {
-            if (cbDivision.getItemAt(i).split(" - ")[0].equals(tbEmp.getValueAt(tbEmp.getSelectedRow(), 8).toString())) {
-                cbDivision.setSelectedIndex(i);
-            }
-        }
-    }//GEN-LAST:event_jScrollPane2MouseClicked
+
+
+    }//GEN-LAST:event_scrlEmpMouseClicked
 
     private void btDeleteEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteEmpActionPerformed
         // TODO add your handling code here:
@@ -700,17 +763,49 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         }
         tableDataEmp(eci.getAll());
-        
+
     }//GEN-LAST:event_btDeleteEmpActionPerformed
 
     private void tbEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEmpMouseClicked
         // TODO add your handling code here:
+        tfEmpId.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 1).toString());
+        tfEmpName.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 2).toString());
+        tfEmpAdrress.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 3).toString());
+        tfEmpMail.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 4).toString());
+        if ((tbEmp.getValueAt(tbEmp.getSelectedRow(), 5) == null)) {
+            tfEmpManagerId.setText("");
+        } else {
+            tfEmpManagerId.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 5).toString());
+        }
+
+        tfEmpSal.setText(tbEmp.getValueAt(tbEmp.getSelectedRow(), 6).toString());
+        for (int i = 0; i < cbSite.getItemCount(); i++) {
+            if (cbSite.getItemAt(i).split(" - ")[0].equals(tbEmp.getValueAt(tbEmp.getSelectedRow(), 7).toString())) {
+                cbSite.setSelectedIndex(i);
+            }
+        }
+        for (int i = 0; i < cbDivision.getItemCount(); i++) {
+            if (cbDivision.getItemAt(i).split(" - ")[0].equals(tbEmp.getValueAt(tbEmp.getSelectedRow(), 8).toString())) {
+                cbDivision.setSelectedIndex(i);
+            }
+        }
     }//GEN-LAST:event_tbEmpMouseClicked
 
     private void btSearchEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchEmpActionPerformed
         // TODO add your handling code here:
         tableDataEmp(eci.getData(tfSearchEmp.getText()));
     }//GEN-LAST:event_btSearchEmpActionPerformed
+
+    private void miHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miHomeActionPerformed
+        // TODO add your handling code here:
+        panelNewUser.setVisible(false);
+        panelRole.setVisible(true);
+    }//GEN-LAST:event_miHomeActionPerformed
+
+    private void miAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAboutActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "Application for Overtime Request", "About", HEIGHT);
+    }//GEN-LAST:event_miAboutActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -739,14 +834,15 @@ public class AdminView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblSearch;
+    private javax.swing.JMenuItem miAbout;
+    private javax.swing.JMenuItem miHome;
     private javax.swing.JMenuItem miInsertUser;
     private javax.swing.JPanel panelNewUser;
+    private javax.swing.JPanel panelRole;
+    private javax.swing.JScrollPane scrlEmp;
+    private javax.swing.JScrollPane scrlUser;
     private javax.swing.JTable tbEmp;
     private javax.swing.JTable tbUser;
     private javax.swing.JTextField tfEmpAdrress;
