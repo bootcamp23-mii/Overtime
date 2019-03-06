@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="57c5f607-80df-4a51-a00c-a030e8ced7ba">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+ ( SELECT COUNT(OVERTIME."STATUS")      
+FROM
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '1' AND TIME_SHEET.TIME_SHEET_DATE BETWEEN TO_DATE ('20190301','YYYYMMDD') AND TO_DATE('20190401','YYYYMMDD') ) AS APPROVED,
+( SELECT COUNT(OVERTIME."STATUS")    
+FROM
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '-1' AND TIME_SHEET.TIME_SHEET_DATE BETWEEN TO_DATE ('20190301','YYYYMMDD') AND TO_DATE('20190401','YYYYMMDD')) AS REJECTED,
+( SELECT COUNT(OVERTIME."STATUS")    
+FROM
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '0' AND TIME_SHEET.TIME_SHEET_DATE BETWEEN TO_DATE ('20190301','YYYYMMDD') AND TO_DATE('20190401','YYYYMMDD')) AS NOT_CONFIRMED,     
+EMPLOYEE."ID" AS EMPLOYEE_ID,
+     EMPLOYEE."NAME" AS EMPLOYEE_NAME,
+     OVERTIME."OVERTIME_DATE" AS OVERTIME_OVERTIME_DATE,
+     OVERTIME."STATUS" AS OVERTIME_STATUS,
+     OVERTIME."TIME_DURATION" AS OVERTIME_TIME_DURATION
+FROM
+     "ADMIN"."EMPLOYEE" EMPLOYEE INNER JOIN "ADMIN"."TIME_SHEET" TIME_SHEET ON EMPLOYEE."ID" = TIME_SHEET."EMPLOYEE"
+     INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET"
+WHERE TIME_SHEET.TIME_SHEET_DATE BETWEEN TO_DATE ('20190301','YYYYMMDD') AND TO_DATE('20190401','YYYYMMDD')
+]]>
+	</queryString>
+	<field name="APPROVED" class="java.math.BigDecimal"/>
+	<field name="REJECTED" class="java.math.BigDecimal"/>
+	<field name="NOT_CONFIRMED" class="java.math.BigDecimal"/>
+	<field name="EMPLOYEE_ID" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="OVERTIME_OVERTIME_DATE" class="java.sql.Timestamp"/>
+	<field name="OVERTIME_STATUS" class="java.math.BigDecimal"/>
+	<field name="OVERTIME_TIME_DURATION" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="443" y="0" width="100" height="20" uuid="c9c9c4c6-05a4-4b8b-bfed-9fb6030e78fb"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="27" y="0" width="45" height="20" uuid="5f587e8c-04e7-47c1-b5d5-3986449db7ee"/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="20" width="45" height="20" uuid="e84a71c1-ff9f-4cf8-9a89-433adc4b53df"/>
+				<text><![CDATA[NAME]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="49" splitType="Stretch">
+			<rectangle>
+				<reportElement x="27" y="29" width="76" height="20" backcolor="#CCFFFF" uuid="2f4dc564-a69a-4667-898f-86c3623d0f29"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="103" y="29" width="76" height="20" backcolor="#CCFFFF" uuid="05c56ab3-1caf-43b4-a49b-69ea680ab73d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="179" y="29" width="78" height="20" backcolor="#CCFFFF" uuid="3833c768-e612-432d-9968-8d6d188ba1bc"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="179" y="29" width="76" height="20" backcolor="#FFFFFF" uuid="65e3e4b7-0460-4ac1-9bb3-3dac71101a92"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[NOT_CONFIRMED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="103" y="29" width="76" height="20" uuid="4ae7bc1a-da3e-4e32-b977-91f9fe7b61e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[REJECTED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="29" width="76" height="20" uuid="369efb0d-e52c-4dcd-984f-582b7c199ceb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[APPROVED]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<rectangle>
+				<reportElement x="429" y="50" width="100" height="20" uuid="28924cc4-33ae-4f97-958e-65b49773bf93"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="327" y="50" width="100" height="20" uuid="409d2549-9ae6-4e7c-934b-cb4b249f1adf"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="227" y="50" width="100" height="20" uuid="485ab368-0d1b-45c1-b46d-82c864c303ad"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="127" y="50" width="100" height="20" uuid="a15734a3-92b9-4cfc-9e74-0601478de2ac"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="50" width="100" height="20" uuid="fc8d577d-7177-4ac7-9523-dc090a92a642"/>
+			</rectangle>
+			<textField>
+				<reportElement x="27" y="0" width="76" height="20" uuid="c2b20a10-085f-4b87-bc3a-188b7abab10b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{APPROVED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="0" width="76" height="20" uuid="628e00fa-9ff0-4cb9-9113-8bd232f61c0c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REJECTED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="0" width="78" height="20" uuid="38c6f578-ebb0-468a-81cd-ca8a61c5a916"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOT_CONFIRMED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="70" width="100" height="20" uuid="b1fd5f2b-dac3-4921-9cb0-d9e670eba8a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="70" width="100" height="20" uuid="3b90d2d0-c16a-4c06-9c3b-362337517740"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="227" y="70" width="100" height="20" uuid="1f3bd25b-f2e2-4ec5-8a3b-40aa3a73fe68"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_OVERTIME_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="70" width="100" height="20" uuid="4debecc8-4db2-4988-a8c7-0d97dd6d9de0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="70" width="102" height="20" uuid="46c43754-8a1d-4f7e-9100-bab7260dedf3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_TIME_DURATION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="127" y="50" width="100" height="20" uuid="c84ee818-3f9f-4d57-8479-6bef27149345"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[EMPLOYEE NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="50" width="100" height="20" uuid="535386d5-367a-4bd6-a401-bc4a32012af6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="50" width="100" height="20" uuid="73c5ac28-a646-483e-8bcf-687152f29d7d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="427" y="50" width="100" height="20" uuid="f7f7bf86-7f8f-48c0-afe3-870d72941e78"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DURATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="50" width="100" height="20" uuid="7bb4c98e-21ba-4388-bad9-73b578a7ecc3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ID EMPLOYEE]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="68" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="443" y="0" width="100" height="20" uuid="1d1d7d21-b43c-4205-884a-a63aaa7c6c49"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<line>
+				<reportElement x="429" y="0" width="100" height="1" uuid="3142741b-9c12-4c76-abc6-e392ffab9045"/>
+			</line>
+			<staticText>
+				<reportElement x="443" y="1" width="100" height="20" uuid="b94eca5d-bf41-4d8e-bf21-1316e160b6f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TTD]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
