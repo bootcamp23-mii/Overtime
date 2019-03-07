@@ -42,8 +42,8 @@ public class TestRun {
 //            Division d= (Division) object;
 //            System.out.println(d.getName());
 
-            UserController uc = new UserController(factory);
-            System.out.println(uc.login("alien", "alien"));
+//            UserController uc = new UserController(factory);
+//            System.out.println(uc.login("alien", "alien"));
 //        }
         
 //        for (Object object : dc.getAll()) {

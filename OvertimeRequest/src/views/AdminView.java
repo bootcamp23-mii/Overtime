@@ -99,29 +99,24 @@ public class AdminView extends javax.swing.JInternalFrame {
         return eci.getData(tfEmpId.getText()).isEmpty();
     }
 
-    private void setComboBox() {
-        for (Site site : sites) {
-            cbSite.addItem(site.getId() + " - " + site.getName());
-        }
-        for (Division division : divisions) {
-            cbDivision.addItem(division.getId() + " - " + division.getName());
-        }
-    }
+//    private void setComboBox() {
+//        for (Site site : sites) {
+//            cbSite.addItem(site.getId() + " - " + site.getName());
+//        }
+//        for (Division division : divisions) {
+//            cbDivision.addItem(division.getId() + " - " + division.getName());
+//        }
+//    }
 
     private void showSite() {
-        for (Employee employee : employees) {
-            if (!sites.contains(employee.getSite())) {
-                sites.add(new Site(employee.getId(),
-                        employee.getName(), employee.getAddress()));
-            }
+        for (Site site : sites) {
+            cbSite.addItem(site.getId()+" - "+site.getName());
         }
     }
 
     private void showDivision() {
-        for (Employee employee : employees) {
-            if (!divisions.contains(employee.getDivision())) {
-                divisions.add(new Division(employee.getId(), employee.getName()));
-            }
+        for (Division division : divisions) {
+            cbDivision.addItem(division.getId()+" - "+division.getName());
         }
     }
 
@@ -685,7 +680,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         tableDataEmp(eci.getAll());
         showDivision();
         showSite();
-        setComboBox();
+//        setComboBox();
 
 
     }//GEN-LAST:event_miInsertUserActionPerformed

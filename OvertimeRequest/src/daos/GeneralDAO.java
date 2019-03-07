@@ -53,6 +53,7 @@ public class GeneralDAO<T> implements DAOInterface<T> {
         return query + " order by 1";
     }
 
+    @Override
     public List<T> getByKarByMang(Object id) {
         List<T> obj = new ArrayList<>();
         session = this.factory.openSession();
