@@ -18,8 +18,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Employee;
@@ -52,7 +59,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
 
     JasperReport JasRep;
     JasperPrint JasPri;
-    Map param = new HashMap();
+    Map<String, Object> param = new HashMap<>();
     JasperDesign JasDes;
     Connection c;
     String id = Sessions.getId();
@@ -69,21 +76,23 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     }
 
     private void tableData(List<Employee> ts) {
-        Object[] columnNames = {"Nomor", "Nama", "Id OT", "Overtime Date", "Duration", "TimeSheet", "Keterangan", "Status"};
+        Object[] columnNames = {"Nomor", "Nama","id", "Email", "Id OT", "Overtime Date", "Duration", "TimeSheet", "Keterangan", "Status"};
         Object[][] data = new Object[ts.size()][columnNames.length];
         int i;
         for (Employee employee : ts) {
             for (TimeSheet timesheet : employee.getTimeSheetList()) {
                 for (Overtime overtime : timesheet.getOvertimeList()) {
                     for (i = 0; i < data.length; i++) {
-                        data[i][0] = (i + 1);
+                        data[i][0] = i + 1;
                         data[i][1] = employee.getName();
-                        data[i][2] = overtime.getId();
-                        data[i][3] = overtime.getOvertimeDate();
-                        data[i][4] = overtime.getTimeDuration();
-                        data[i][5] = overtime.getTimeSheet().getId();
-                        data[i][6] = overtime.getKeterangan();
-                        data[i][7] = overtime.getStatus();
+                        data[i][2] = employee.getId();
+                        data[i][3] = employee.getEmail();
+                        data[i][4] = overtime.getId();
+                        data[i][5] = overtime.getOvertimeDate();
+                        data[i][6] = overtime.getTimeDuration();
+                        data[i][7] = overtime.getTimeSheet().getId();
+                        data[i][8] = overtime.getKeterangan();
+                        data[i][9] = overtime.getStatus();
                     }
                 }
             }
@@ -128,6 +137,16 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         tfKeterangan = new javax.swing.JTextField();
         btReject = new javax.swing.JButton();
         btClear = new javax.swing.JButton();
+        tfMonth2 = new javax.swing.JTextField();
+        tfMonth = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        btsend = new javax.swing.JButton();
+        tfEmail = new javax.swing.JTextField();
+        lblEmail = new javax.swing.JLabel();
+        tfIdEmp = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -252,6 +271,19 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel3.setText("until");
+
+        btsend.setText("Send Email");
+        btsend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btsendActionPerformed(evt);
+            }
+        });
+
+        lblEmail.setText("Email");
+
+        jLabel4.setText("Id Emp");
+
         javax.swing.GroupLayout pnManagerMainLayout = new javax.swing.GroupLayout(pnManagerMain);
         pnManagerMain.setLayout(pnManagerMainLayout);
         pnManagerMainLayout.setHorizontalGroup(
@@ -299,13 +331,36 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                                         .addComponent(btReject)))
                                 .addGap(30, 30, 30)
                                 .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                                    .addComponent(lblTitle)
-                                    .addGap(38, 38, 38)
-                                    .addComponent(lblSubTitle)
-                                    .addGap(84, 84, 84))
-                                .addComponent(btPrint, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
+                                .addComponent(lblTitle)
+                                .addGap(38, 38, 38)
+                                .addComponent(lblSubTitle)
+                                .addGap(84, 84, 84))))
+                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                .addGap(219, 219, 219)
+                                .addComponent(tfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tfMonth2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btPrint))
+                            .addComponent(jSeparator1)))
+                    .addComponent(jSeparator2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tfIdEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblEmail)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addComponent(btsend)))
                 .addContainerGap())
         );
         pnManagerMainLayout.setVerticalGroup(
@@ -319,27 +374,23 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnManagerMainLayout.createSequentialGroup()
-                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnManagerMainLayout.createSequentialGroup()
-                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblTimeSheet)
-                                    .addComponent(tfImeSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tfStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tfKeterangan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addGap(18, 18, 18)
-                                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btApprove)
-                                    .addComponent(btReject))))
-                        .addGap(9, 9, 9)
-                        .addComponent(btPrint))
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblTimeSheet)
+                            .addComponent(tfImeSheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfKeterangan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btApprove)
+                            .addComponent(btReject)))
                     .addGroup(pnManagerMainLayout.createSequentialGroup()
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -358,9 +409,25 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                             .addComponent(lblCount))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btClear)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btPrint)
+                    .addComponent(tfMonth2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(tfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btsend)
+                    .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmail)
+                    .addComponent(tfIdEmp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(spTableManager, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         miManager.setText("MENU");
@@ -399,20 +466,21 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbManagerMouseClicked
-        tfId.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 2).toString());
+        tfId.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 4).toString());
         tfName.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 1).toString());
-        tfDate.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 3).toString());
-        tfCount.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 4).toString());
-        tfKeterangan.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 6).toString());
-        tfImeSheet.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 5).toString());
-        tfStatus.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 7).toString());
+        tfDate.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 5).toString());
+        tfCount.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 6).toString());
+        tfKeterangan.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 8).toString());
+        tfImeSheet.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 7).toString());
+        tfStatus.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 9).toString());
+        tfEmail.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 3).toString());
+        tfIdEmp.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 2).toString());
 
         btApprove.setEnabled(true);
         btReject.setEnabled(true);
     }//GEN-LAST:event_tbManagerMouseClicked
 
     private void btApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApproveActionPerformed
-
         int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Approve this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (reply == JOptionPane.YES_OPTION) {
             String id = tfId.getText();
@@ -433,6 +501,10 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btApproveActionPerformed
 
     private void btPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintActionPerformed
+        param.put("pmId", id);
+        param.put("pmName", lblUsername.getText());
+        param.put("pmMonth", tfMonth.getText());
+        param.put("pmMonth2", tfMonth2.getText());
         try {
             c = sessionFactory.getSessionFactoryOptions().getServiceRegistry().
                     getService(ConnectionProvider.class).getConnection();
@@ -482,22 +554,55 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         btReject.setEnabled(false);
     }//GEN-LAST:event_btClearActionPerformed
 
+    private void btsendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsendActionPerformed
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        Session session = Session.getDefaultInstance(props);
+        try {
+            InternetAddress fromAddress = new InternetAddress("adhityawisnuprabowo@gmail.com");
+            InternetAddress toAddress = new InternetAddress(tfEmail.getText());
+
+            Message message = new MimeMessage(session);
+            message.setFrom(fromAddress);
+            message.setRecipient(Message.RecipientType.TO, toAddress);
+            message.setSubject("Overtime");
+            message.setText("Berasil");
+            Transport.send(message, "adhityawisnuprabowo@gmail.com", "password");
+            JOptionPane.showMessageDialog(null, "Berhasil kirim Email!");
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btsendActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btApprove;
     private javax.swing.JButton btClear;
     private javax.swing.JButton btPrint;
     private javax.swing.JButton btReject;
+    private javax.swing.JButton btsend;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblCount;
     private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblNik;
@@ -513,9 +618,13 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JTable tbManager;
     private javax.swing.JTextField tfCount;
     private javax.swing.JTextField tfDate;
+    private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfId;
+    private javax.swing.JTextField tfIdEmp;
     private javax.swing.JTextField tfImeSheet;
     private javax.swing.JTextField tfKeterangan;
+    private javax.swing.JTextField tfMonth;
+    private javax.swing.JTextField tfMonth2;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfStatus;
     // End of variables declaration//GEN-END:variables
