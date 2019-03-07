@@ -19,5 +19,6 @@ public interface DivisionControllerInterface {
     public List<Division> getAll();
     public List<Division> getData(String keyword);
     public Division getById(String id);
+    public Division last();
     
 }

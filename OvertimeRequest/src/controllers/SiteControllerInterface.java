@@ -18,4 +18,5 @@ public interface SiteControllerInterface {
     public List<Site> search(Object keyword);
     public String save(String id, String name, String location);
     public String delete(String id, String name, String location);
+    public Site last();
 }

@@ -37,6 +37,10 @@ public class UserController implements UserControllerInterface{
     public List<Users> getAll() {
         return dao.getData("");
     }
+    
+    public Users last() {
+        return dao.last("");
+    }
 
     @Override
     public boolean save(String username, String password, String employee) {

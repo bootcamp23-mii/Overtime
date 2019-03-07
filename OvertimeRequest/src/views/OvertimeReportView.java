@@ -9,11 +9,15 @@ import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
+import controllers.TaskController;
+import controllers.TaskControllerInterface;
 import controllers.TimeSheetController;
 import controllers.TimeSheetControllerInterface;
+import javax.swing.JOptionPane;
 import models.Employee;
 import models.Overtime;
 import models.Sessions;
+import models.Task;
 import models.TimeSheet;
 import org.hibernate.SessionFactory;
 import tools.HibernateUtil;
@@ -33,10 +37,25 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     String idtab = Sessions.getIdtab();
     TimeSheetControllerInterface tc = new TimeSheetController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
+    TaskControllerInterface tic = new TaskController(factory);
 
     public OvertimeReportView() {
         initComponents();
         setData(idtab);
+        Employee e = ec.getById(id);
+        tfNik.setText(id);
+        tfName.setText(e.getName());
+        setukuran();
+
+        if (idtab != "") {
+            btDelete.setEnabled(true);
+        } else {
+            btDelete.setEnabled(false);
+        }
+    }
+
+    private void setukuran() {
+        this.setSize(670, 510);
     }
 
     public void setData(String idTabel) {
@@ -48,6 +67,16 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             tfDate.setText((tc.getByid(idtab).getOvertimeList().get(0).getOvertimeDate()).toString());
             taDetail.setText(tc.getByid(idtab).getOvertimeList().get(0).getKeterangan());
         }
+    }
+
+    public void clear() {
+        tfNik.setText("");
+        tfName.setText("");
+        tfTimeDuration.setText("");
+        tfDate.setText("");
+        tfTask.setText("");
+        taDetail.setText("");
+
     }
 
     /**
@@ -78,6 +107,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         btSubmit = new javax.swing.JButton();
         btCancel = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        btDelete = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(199, 220, 236));
 
@@ -117,6 +147,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         tfTimeDuration.setCaretColor(new java.awt.Color(128, 137, 149));
 
         tfDate.setForeground(new java.awt.Color(128, 137, 149));
+        tfDate.setToolTipText("YYYY-MM-DD");
 
         tfTask.setForeground(new java.awt.Color(128, 137, 149));
 
@@ -128,12 +159,29 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         btSubmit.setBackground(new java.awt.Color(128, 137, 149));
         btSubmit.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         btSubmit.setText("Submit");
+        btSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSubmitActionPerformed(evt);
+            }
+        });
 
         btCancel.setBackground(new java.awt.Color(128, 137, 149));
         btCancel.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         btCancel.setText("Cancel");
+        btCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Upload File");
+
+        btDelete.setText("Delete");
+        btDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,6 +209,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btDelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btSubmit)
                                 .addGap(3, 3, 3)
                                 .addComponent(btCancel))
@@ -212,7 +262,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSubmit)
                     .addComponent(btCancel)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(btDelete))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -223,9 +274,68 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfNikActionPerformed
 
+    private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
+        // TODO add your handling code here:
+
+//        System.out.println(t.getId());
+        if (idtab != "") {
+            if (tc.getByid(idtab).getOvertimeList().get(0).getStatus().toString() != "0") {
+                JOptionPane.showMessageDialog(null, "Data sudah Diproses");
+            } else {
+                Overtime x = oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId());
+//        System.out.println(x.getId());
+                Task t = tic.getByid(oc.getById(x.getId()).getTaskList().get(0).getId());
+                tc.save(idtab, tfDate.getText(), ec.getById(id).getName(), id);
+                oc.insert(tc.getByid(idtab).getOvertimeList().get(0).getId(), tfDate.getText(), tfTimeDuration.getText(), taDetail.getText(), "0", idtab);
+                JOptionPane.showMessageDialog(null, tic.save(t.getId(), tfTask.getText(), x.getId()));
+            }
+        } else {
+            tc.save("TS02", tfDate.getText(), ec.getById(id).getName(), id);
+            oc.insert("o002", tfDate.getText(), tfTimeDuration.getText(), taDetail.getText(), "0", tc.last().getId());
+            JOptionPane.showMessageDialog(null, tic.save("T02", tfTask.getText(), oc.last().getId()));
+        }
+
+
+    }//GEN-LAST:event_btSubmitActionPerformed
+
+    private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        EmployeeMainView op = new EmployeeMainView();
+        this.getParent().add(op);
+        op.setVisible(true);
+        idtab = "";
+    }//GEN-LAST:event_btCancelActionPerformed
+
+    private void btDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteActionPerformed
+        // TODO add your handling code here:
+        // public String delete(String id, String date, String name, String employee);
+
+        Overtime x = oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId());
+//        System.out.println(x.getId());
+        Task t = tic.getByid(oc.getById(x.getId()).getTaskList().get(0).getId());
+//        System.out.println(t.getId());
+        if (tc.getByid(idtab).getOvertimeList().get(0).getStatus().toString() != "0") {
+            JOptionPane.showMessageDialog(null, "Data sudah Diproses");
+        } else {
+
+            tic.delete(t.getId(), "", "");
+
+            JOptionPane.showMessageDialog(null, oc.delete(tc.getByid(idtab).getOvertimeList().get(0).getId(), "0000-00-00",
+                    "0", "", "0",
+                    ""));
+
+            JOptionPane.showMessageDialog(null, tc.delete(idtab, "0000-00-00", "", ""));
+            clear();
+        }
+
+
+    }//GEN-LAST:event_btDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
+    private javax.swing.JButton btDelete;
     private javax.swing.JButton btSubmit;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

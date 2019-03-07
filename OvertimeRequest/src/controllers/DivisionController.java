@@ -53,4 +53,8 @@ public class DivisionController implements DivisionControllerInterface{
     public Division getById(String id) {
         return dao.getById(id);
     }
+    
+    public Division last() {
+        return dao.last("");
+    }
 }

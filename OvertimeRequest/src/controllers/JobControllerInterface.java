@@ -23,4 +23,6 @@ public interface JobControllerInterface {
     public List<Job> getData(String keyword);
 
     public Job getById(String id);
+    
+    public Job last();
 }

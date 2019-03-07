@@ -39,6 +39,15 @@ public class TimeSheetController implements TimeSheetControllerInterface{
     public List<TimeSheet> search(Object keyword) {
         return dao.getData(keyword);
     }
+    
+    public TimeSheet last() {
+        return dao.last("");
+    }
+    
+    public TimeSheet first() {
+        return dao.last("");
+    }
+
 
     @Override
     public String save(String id, String date, String name, String employee) {

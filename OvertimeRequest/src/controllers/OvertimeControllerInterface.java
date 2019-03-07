@@ -25,4 +25,7 @@ public interface OvertimeControllerInterface {
     public List<Overtime> getData(String key);
 
     public List<Overtime> getAll();
+    
+    public Overtime last();
+    public Overtime first();
 }

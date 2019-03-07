@@ -18,5 +18,6 @@ public interface UserControllerInterface {
     public boolean save(String username, String password, String employee);
     public boolean login(String username, String password);
     public String delete(String username, String password, String employee);
+    public Users last();
     
 }

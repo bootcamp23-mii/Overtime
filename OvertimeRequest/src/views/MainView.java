@@ -28,6 +28,7 @@ public class MainView extends javax.swing.JFrame {
         int frameWidth = ((dim.width - this.getSize().width) / 2);
         int frameHeigth = ((dim.height - this.getSize().height) / 2);
         this.setLocation(frameWidth, frameHeigth);
+        
     }
     
     private void clearMain(){
@@ -133,7 +134,7 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MII, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
@@ -158,11 +159,11 @@ public class MainView extends javax.swing.JFrame {
         pnMain2.setLayout(pnMain2Layout);
         pnMain2Layout.setHorizontalGroup(
             pnMain2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 677, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         pnMain2Layout.setVerticalGroup(
             pnMain2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 514, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

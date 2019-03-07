@@ -18,5 +18,7 @@ public interface TimeSheetControllerInterface {
     public List<TimeSheet> search(Object keyword);
     public String save(String id, String date, String name, String employee);
     public String delete(String id, String date, String name, String employee);
+    public TimeSheet last();
+    public TimeSheet first();
     
 }

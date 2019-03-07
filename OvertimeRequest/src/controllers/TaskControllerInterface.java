@@ -16,7 +16,8 @@ public interface TaskControllerInterface {
     public Task getByid(String id);
     public List<Task> getAll();
     public List<Task> search(Object keyword);
-    public String save(String id, String name);
-    public String delete(String id, String name);
-    
+    public String save(String id, String name, String overtime);
+    public String delete(String id, String name, String overtime);
+    public Task last();
+    public Task first();
 }

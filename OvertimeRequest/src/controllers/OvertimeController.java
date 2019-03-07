@@ -78,11 +78,17 @@ public class OvertimeController implements OvertimeControllerInterface{
         return dao.getData(key);
     }
     
+    public Overtime first() {
+        return dao.last("");
+    }
+    
     @Override
      public List<Overtime> getAll() {
         return dao.getData("");
     }
     
-    
+    public Overtime last() {
+        return dao.last("");
+    }
     
 }

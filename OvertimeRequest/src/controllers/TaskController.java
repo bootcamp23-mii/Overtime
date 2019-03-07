@@ -9,6 +9,7 @@ import daos.DAOInterface;
 import daos.GeneralDAO;
 import java.nio.channels.SeekableByteChannel;
 import java.util.List;
+import models.Overtime;
 import models.Task;
 import org.hibernate.SessionFactory;
 
@@ -32,6 +33,14 @@ public class TaskController implements TaskControllerInterface{
     public List<Task> getAll() {
         return dao.getData("");
     }
+    
+    public Task last() {
+        return dao.last("");
+    }
+    
+    public Task first() {
+        return dao.last("");
+    }
 
     @Override
     public List<Task> search(Object keyword) {
@@ -39,8 +48,8 @@ public class TaskController implements TaskControllerInterface{
     }
 
     @Override
-    public String save(String id, String name) {
-        if (dao.saveOrDelete(new Task(id, name), true)) {
+    public String save(String id, String name, String overtime) {
+        if (dao.saveOrDelete(new Task(id, name, new Overtime(overtime)), true)) {
             return "Save Data Success!";
         } else {
             return "Save Failed!";
@@ -48,8 +57,8 @@ public class TaskController implements TaskControllerInterface{
     }
 
     @Override
-    public String delete(String id, String name) {
-        if (dao.saveOrDelete(new Task(id, name), false)) {
+    public String delete(String id, String name, String overtime) {
+        if (dao.saveOrDelete(new Task(id, name, new Overtime(overtime)), false)) {
             return "Delete Data Success!";
         } else {
             return "Delete Failed!";

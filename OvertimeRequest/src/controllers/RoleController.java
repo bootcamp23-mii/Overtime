@@ -30,6 +30,10 @@ public class RoleController implements RoleControllerInterface {
         return dao.getById(id);
     }
 
+    public Role last() {
+        return dao.last("");
+    }
+
     @Override
     public List<Role> search(Object keyword) {
         return dao.getData(keyword);
@@ -42,14 +46,6 @@ public class RoleController implements RoleControllerInterface {
         } else {
             return "Save Failed!";
         }
-    }
-    
-    @Override
-    public String saveRoleId(String id){
-        if (dao.saveOrDelete(new Role(id), true)) {
-            return "Save Data Success!";
-        }
-        return "Save Failed!";
     }
 
     @Override
@@ -64,6 +60,14 @@ public class RoleController implements RoleControllerInterface {
     @Override
     public List<Role> getAll() {
         return dao.getData("");
+    }
+
+    @Override
+    public String saveRoleId(String id) {
+        if (dao.saveOrDelete(new Role(id), true)) {
+            return "Save Data Success!";
+        }
+        return "Save Failed!";
     }
 
 }

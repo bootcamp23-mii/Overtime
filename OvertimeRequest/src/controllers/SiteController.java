@@ -33,6 +33,10 @@ public class SiteController implements SiteControllerInterface {
     public List<Site> getAll() {
         return dao.getData("");
     }
+    
+    public Site last() {
+        return dao.last("");
+    }
 
     @Override
     public List<Site> search(Object keyword) {

@@ -11,13 +11,27 @@ import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
 import controllers.TimeSheetController;
 import controllers.TimeSheetControllerInterface;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import models.Employee;
 import models.Overtime;
 import models.Sessions;
 import models.TimeSheet;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import tools.HibernateUtil;
 
 /**
@@ -25,18 +39,24 @@ import tools.HibernateUtil;
  * @author AdhityaWP
  */
 public class EmployeeMainView extends javax.swing.JInternalFrame {
+
     DefaultTableModel myTableModel = new DefaultTableModel();
 
     /**
      * Creates new form ManagerView
      */
-    
     SessionFactory factory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTable = new DefaultTableModel();
     OvertimeControllerInterface oc = new OvertimeController(factory);
     String id = Sessions.getId();
     TimeSheetControllerInterface tc = new TimeSheetController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
+    JasperReport JasRep;
+    JasperPrint JasPri;
+    Map param = new HashMap();
+    JasperDesign JasDes;
+    Connection c;
+
     public EmployeeMainView() {
         initComponents();
         List a = ec.getById(id).getTimeSheetList();
@@ -44,9 +64,14 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         lblNik.setText(u.getId());
         lblUsername.setText(u.getName());
         tableData(a);
+        setukuran();
     }
-    
-        private void tableData(List<TimeSheet> ts) {
+
+    private void setukuran() {
+        this.setSize(670, 510);
+    }
+
+    private void tableData(List<TimeSheet> ts) {
 //        jobs = jc.getAll();
         Object[] columnNames = {"Nomor", "Id", "Overtime Date", "Duration", "Status"};
 
@@ -55,7 +80,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
             data[i][1] = ts.get(i).getId();
-            for (Object obj :tc.getByid(ts.get(i).getId()).getOvertimeList()) {
+            for (Object obj : tc.getByid(ts.get(i).getId()).getOvertimeList()) {
                 Overtime overtime = (Overtime) obj;
                 data[i][2] = overtime.getOvertimeDate();
                 data[i][3] = overtime.getTimeDuration();
@@ -87,13 +112,10 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         spTableManager = new javax.swing.JScrollPane();
         tbEmployee = new javax.swing.JTable();
         btReport = new javax.swing.JButton();
+        btOtReport = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
 
         setClosable(true);
         setTitle("Employee Main");
@@ -139,7 +161,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        pnManagerMain.add(pnUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(455, 86, -1, -1));
+        pnManagerMain.add(pnUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 86, 210, -1));
 
         tbEmployee.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -167,26 +189,27 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 btReportActionPerformed(evt);
             }
         });
-        pnManagerMain.add(btReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 86, -1, 33));
+        pnManagerMain.add(btReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, 33));
+
+        btOtReport.setText("Overtime Report");
+        btOtReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btOtReportActionPerformed(evt);
+            }
+        });
+        pnManagerMain.add(btOtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 120, 33));
 
         getContentPane().add(pnManagerMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 655, 384));
 
         miManager.setText("MENU");
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Exit");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         miManager.add(jMenuItem1);
-
-        jMenuItem2.setText("jMenuItem2");
-        miManager.add(jMenuItem2);
-
-        jMenuItem3.setText("jMenuItem3");
-        miManager.add(jMenuItem3);
-
-        jMenuItem4.setText("jMenuItem4");
-        miManager.add(jMenuItem4);
-
-        jMenuItem5.setText("jMenuItem5");
-        miManager.add(jMenuItem5);
 
         jMenuBar1.add(miManager);
 
@@ -215,15 +238,39 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tbEmployeeMouseClicked
 
+    private void btOtReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOtReportActionPerformed
+        // TODO add your handling code here:
+        param.put("id", id);
+        try {
+            c = factory.
+                    getSessionFactoryOptions().getServiceRegistry().
+                    getService(ConnectionProvider.class).getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerMainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            String fileName = "./src/report/report1.jrxml";
+            String filetoFill = "./src/report/report1.jasper";
+            JasperCompileManager.compileReport(fileName);
+            JasPri = JasperFillManager.fillReport(filetoFill, param, c);
+            JasperViewer.viewReport(JasPri, false);
+
+        } catch (JRException ex) {
+            System.out.println(ex.toString());
+        }
+    }//GEN-LAST:event_btOtReportActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btOtReport;
     private javax.swing.JButton btReport;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JLabel lblNik;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;

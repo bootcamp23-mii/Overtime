@@ -54,22 +54,6 @@ public class GeneralDAO<T> implements DAOInterface<T> {
     }
 
     @Override
-    public List<T> getByKarByMang(Object id) {
-        List<T> obj = new ArrayList<>();
-        session = this.factory.openSession();
-        transaction = session.beginTransaction();
-        try {
-            obj = session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE manager = '" + id + "'").list();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
-        return obj;
-    }
-
-    @Override
     public List<T> getData(Object keyword) {
         List<T> obj = new ArrayList<>();
         session = this.factory.openSession();
@@ -127,11 +111,59 @@ public class GeneralDAO<T> implements DAOInterface<T> {
 
     @Override
     public List<T> login(Object username) {
-        List<T> obj = new ArrayList<>();
+        List <T> obj = new ArrayList<>();
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
             obj = session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE USERNAME = '" + username + "'").list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return obj;
+    }
+    
+    public T last(Object keyword) {
+        T obj = null;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            obj = (T) session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE ROWID = ( select max(ROWID) from " + t.getClass().getSimpleName()+")").uniqueResult();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return obj;
+    }
+    
+    public T first(Object keyword) {
+        T obj = null;
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            obj = (T) session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE ROWID = ( select min(ROWID) from " + t.getClass().getSimpleName()+")").uniqueResult();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return obj;
+    }
+    
+    
+    public List<T> getByKarByMang(Object id) {
+        List<T> obj = new ArrayList<>();
+        session = this.factory.openSession();
+        transaction = session.beginTransaction();
+        try {
+            obj = session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE manager = '" + id + "'").list();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {

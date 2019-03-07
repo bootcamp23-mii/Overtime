@@ -38,8 +38,8 @@ public class EmployeeController implements EmployeeControllerInterface {
     }
 
     @Override
-    public String delete(String id, String name, String address, String email, String salary, String division, String manager, String site) {
-        if (dao.saveOrDelete(new Employee(id, name, address, email, new BigInteger(salary), new Division(division), new Employee(manager), new Site(site)), false)) {
+    public String delete(String id) {
+        if (dao.saveOrDelete(new Employee(id), false)) {
             return "Selamat Data berhasil dihapus";
         }
         return "Maaf Data gagal dihapus";
@@ -58,6 +58,10 @@ public class EmployeeController implements EmployeeControllerInterface {
     @Override
     public Employee getById(String id) {
         return dao.getById(id);
+    }
+    
+    public Employee last() {
+        return dao.last("");
     }
 
 }

@@ -56,6 +56,10 @@ public class JobController implements JobControllerInterface{
     public Job getById(String id){
         return dao.getById(id);
     }
+    
+    public Job last() {
+        return dao.last("");
+    }
 
 
 

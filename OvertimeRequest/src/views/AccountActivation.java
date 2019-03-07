@@ -7,6 +7,7 @@ package views;
 
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
+import controllers.Mailto;
 import controllers.UserController;
 import controllers.UserControllerInterface;
 import java.awt.Dimension;
@@ -27,6 +28,7 @@ public class AccountActivation extends javax.swing.JInternalFrame {
     DefaultTableModel myTable = new DefaultTableModel();
     UserControllerInterface uc = new UserController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
+    Mailto m = new Mailto();
     /**
      * Creates new form RegisterView
      */
@@ -141,9 +143,16 @@ public class AccountActivation extends javax.swing.JInternalFrame {
 
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         // TODO add your handling code here:
+        
         String z = tfNIK.getText();
         Employee a = ec.getById(z);
+       
         if(uc.save(a.getId(), a.getEmail()+a.getId(), a.getId())){
+            String x = a.getId();
+            String y = a.getEmail()+a.getId();
+            String v = a.getEmail();
+            
+            m.kirim("Akun Baru", x, y, v);
             JOptionPane.showMessageDialog(null, "Aktivasi Berhasil");
         }
         else{
