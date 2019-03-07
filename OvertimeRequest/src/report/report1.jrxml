@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="663d664a-7f9b-4acc-9a6c-41896d9ebc5d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     EMPLOYEE."ID" AS EMPLOYEE_ID,
+     EMPLOYEE."NAME" AS EMPLOYEE_NAME,
+     EMPLOYEE."ADDRESS" AS EMPLOYEE_ADDRESS,
+     EMPLOYEE."EMAIL" AS EMPLOYEE_EMAIL,
+     EMPLOYEE."MANAGER" AS EMPLOYEE_MANAGER,
+     EMPLOYEE."SALARY" AS EMPLOYEE_SALARY,
+     EMPLOYEE."SITE" AS EMPLOYEE_SITE,
+     EMPLOYEE."DIVISION" AS EMPLOYEE_DIVISION,
+     TIME_SHEET."ID" AS TIME_SHEET_ID,
+     TIME_SHEET."TIME_SHEET_DATE" AS TIME_SHEET_TIME_SHEET_DATE,
+     TIME_SHEET."NAME" AS TIME_SHEET_NAME,
+     TIME_SHEET."EMPLOYEE" AS TIME_SHEET_EMPLOYEE,
+     OVERTIME."ID" AS OVERTIME_ID,
+     OVERTIME."OVERTIME_DATE" AS OVERTIME_OVERTIME_DATE,
+     OVERTIME."TIME_DURATION" AS OVERTIME_TIME_DURATION,
+     OVERTIME."KETERANGAN" AS OVERTIME_KETERANGAN,
+     OVERTIME."TIME_SHEET" AS OVERTIME_TIME_SHEET,
+     OVERTIME."STATUS" AS OVERTIME_STATUS
+FROM
+     "ADMIN"."EMPLOYEE" EMPLOYEE INNER JOIN "ADMIN"."TIME_SHEET" TIME_SHEET ON EMPLOYEE."ID" = TIME_SHEET."EMPLOYEE"
+     INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET"
+WHERE EMPLOYEE."ID" = $P{id}]]>
+	</queryString>
+	<field name="EMPLOYEE_ID" class="java.lang.String"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_ADDRESS" class="java.lang.String"/>
+	<field name="EMPLOYEE_EMAIL" class="java.lang.String"/>
+	<field name="EMPLOYEE_MANAGER" class="java.lang.String"/>
+	<field name="EMPLOYEE_SALARY" class="java.math.BigDecimal"/>
+	<field name="EMPLOYEE_SITE" class="java.lang.String"/>
+	<field name="EMPLOYEE_DIVISION" class="java.lang.String"/>
+	<field name="TIME_SHEET_ID" class="java.lang.String"/>
+	<field name="TIME_SHEET_TIME_SHEET_DATE" class="java.sql.Timestamp"/>
+	<field name="TIME_SHEET_NAME" class="java.lang.String"/>
+	<field name="TIME_SHEET_EMPLOYEE" class="java.lang.String"/>
+	<field name="OVERTIME_ID" class="java.lang.String"/>
+	<field name="OVERTIME_OVERTIME_DATE" class="java.sql.Timestamp"/>
+	<field name="OVERTIME_TIME_DURATION" class="java.math.BigDecimal"/>
+	<field name="OVERTIME_KETERANGAN" class="java.lang.String"/>
+	<field name="OVERTIME_TIME_SHEET" class="java.lang.String"/>
+	<field name="OVERTIME_STATUS" class="java.math.BigDecimal"/>
+	<group name="OVERTIME_OVERTIME_DATE">
+		<groupExpression><![CDATA[$F{OVERTIME_OVERTIME_DATE}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField>
+					<reportElement style="SubTitle" x="47" y="13" width="506" height="24" forecolor="#000000" uuid="a455c442-a252-44f1-a722-cd48b7eefd55"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OVERTIME_OVERTIME_DATE}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="13" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC" uuid="e08d4add-e01e-4fb0-be00-47a45edda9c1"/>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<group name="OVERTIME_STATUS">
+		<groupExpression><![CDATA[$F{OVERTIME_STATUS}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement style="SubTitle" x="0" y="4" width="460" height="20" uuid="0e76910d-0691-4028-a0c9-82dcb01bf329"/>
+					<textElement>
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OVERTIME_STATUS}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement x="275" y="0" width="300" height="64" uuid="83442811-20e9-4a53-bd14-709d746e5709"/>
+				<imageExpression><![CDATA["leaf_banner_gray.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="263" height="33" uuid="dd166ee8-ecf1-4b47-8151-2c86ae7696a2"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Leaf Gray Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="117" y="46" width="157" height="22" uuid="f1d2fdfb-a93e-4341-8ad3-d4d3e1628c7b"/>
+				<text><![CDATA[Leaf Gray SubTitle]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1" uuid="15b6fe66-4502-4223-b5c9-40ae10816cbc"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="19" width="277" height="15" uuid="f1526037-d10b-4b19-b4f3-4a31b0303e48"/>
+				<text><![CDATA[EMPLOYEE_NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="277" y="19" width="277" height="15" uuid="a5e5e1ea-4bb0-44bb-83af-501b4e1fd5ea"/>
+				<text><![CDATA[OVERTIME_TIME_DURATION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="20546859-4fd8-4556-8a06-722712f8ffc5"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="277" height="15" uuid="c21f614f-f0ea-404e-ac91-a301fb0c74df"/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="277" y="0" width="277" height="15" uuid="b15023c6-26cd-4e17-8ca0-7c45e082a248"/>
+				<textFieldExpression><![CDATA[$F{OVERTIME_TIME_DURATION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="45a49bdd-de91-4e0c-a616-4943d9fb83f4"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="4d23bcc4-827c-4f2e-9633-9fef9ff68f9b"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="4be6bfc7-bb72-47ad-8b03-7a9202c20f91"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="0b91d645-c43f-45f1-a0d7-dbb4856e57b2"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
