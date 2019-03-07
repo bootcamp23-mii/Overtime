@@ -130,7 +130,7 @@ public class GeneralDAO<T> implements DAOInterface<T> {
         session = this.factory.openSession();
         transaction = session.beginTransaction();
         try {
-            obj = (T) session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE ROWID = ( select max(ROWID) from " + t.getClass().getSimpleName()+")").uniqueResult();
+            obj = (T) session.createQuery("FROM " + t.getClass().getSimpleName() + " WHERE id = ( select max(id) from " + t.getClass().getSimpleName()+")").uniqueResult();
             
         } catch (Exception e) {
             e.printStackTrace();
