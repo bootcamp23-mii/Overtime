@@ -573,8 +573,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             message.setFrom(fromAddress);
             message.setRecipient(Message.RecipientType.TO, toAddress);
             message.setSubject("Overtime");
-            message.setText("Berasil");
-            Transport.send(message, "adhityawisnuprabowo@gmail.com", "password");
+            message.setText("Halo"+tfIdEmp.getText()+"\nOvertime Anda pada "+tfDate.getText()+" adalah "+tfCount.getText()+"jam");
+            Transport.send(message, "adhityawisnuprabowo@gmail.com", "didotodid");
             JOptionPane.showMessageDialog(null, "Berhasil kirim Email!");
         } catch (MessagingException ex) {
             ex.printStackTrace();
