@@ -9,12 +9,15 @@ import controllers.DivisionController;
 import controllers.DivisionControllerInterface;
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
+import controllers.Mailto;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
 import controllers.RoleController;
 import controllers.RoleControllerInterface;
 import controllers.SiteController;
 import controllers.SiteControllerInterface;
+import controllers.UserController;
+import controllers.UserControllerInterface;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -43,15 +46,25 @@ public class AdminView extends javax.swing.JInternalFrame {
     private SiteControllerInterface sci= new SiteController(sessionFactory);
     private List<Division> divisions = new ArrayList<>();
     private List<Employee> employees = new ArrayList<>();
+    UserControllerInterface uc = new UserController(sessionFactory);
+    EmployeeControllerInterface ec = new EmployeeController(sessionFactory);
+    Mailto m = new Mailto();
 
     /**
      * Creates new form AdminView
      */
+    
+    
     public AdminView() {
         initComponents();
         tableDataRole(rci.getAll());
         panelNewUser.setVisible(false);
         panelRole.setVisible(true);
+        setukuran();
+    }
+    
+    private void setukuran() {
+        this.setSize(670, 510);
     }
 
     private void tableDataRole(List<Role> role) {
@@ -59,7 +72,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         Object[][] data = new Object[role.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-            data[i][1] = role.get(i).getId();
+            data[i][1] = role.get(i).getEmployee().getId();
             data[i][2] = role.get(i).getEmployee().getName();
             data[i][3] = role.get(i).getJob().getPosition();
             data[i][4] = role.get(i).getName();
@@ -162,6 +175,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         btSave = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         tfRole = new javax.swing.JTextField();
+        tbActivation = new javax.swing.JButton();
         panelNewUser = new javax.swing.JPanel();
         scrlEmp = new javax.swing.JScrollPane();
         tbEmp = new javax.swing.JTable();
@@ -194,6 +208,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
 
         setBackground(new java.awt.Color(199, 220, 236));
+        setClosable(true);
 
         panelRole.setBackground(new java.awt.Color(199, 220, 236));
 
@@ -274,11 +289,21 @@ public class AdminView extends javax.swing.JInternalFrame {
 
         tfRole.setEditable(false);
 
+        tbActivation.setText("Account Activation");
+        tbActivation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbActivationActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelRoleLayout = new javax.swing.GroupLayout(panelRole);
         panelRole.setLayout(panelRoleLayout);
         panelRoleLayout.setHorizontalGroup(
             panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 631, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                .addContainerGap(405, Short.MAX_VALUE)
+                .addComponent(tbActivation, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(109, 109, 109))
             .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelRoleLayout.createSequentialGroup()
                     .addContainerGap()
@@ -317,7 +342,10 @@ public class AdminView extends javax.swing.JInternalFrame {
         );
         panelRoleLayout.setVerticalGroup(
             panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 357, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                .addContainerGap(241, Short.MAX_VALUE)
+                .addComponent(tbActivation)
+                .addGap(93, 93, 93))
             .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelRoleLayout.createSequentialGroup()
                     .addContainerGap()
@@ -802,6 +830,24 @@ public class AdminView extends javax.swing.JInternalFrame {
         JOptionPane.showMessageDialog(null, "Application for Overtime Request", "About", HEIGHT);
     }//GEN-LAST:event_miAboutActionPerformed
 
+    private void tbActivationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbActivationActionPerformed
+        // TODO add your handling code here:
+        String z = tfSearch.getText();
+        Employee a = ec.getById(z);
+       
+        if(uc.save(a.getId(), a.getEmail()+a.getId(), a.getId())){
+            String x = a.getId();
+            String y = a.getEmail()+a.getId();
+            String v = a.getEmail();
+            
+            m.kirim("Akun Baru", x, y, v);
+            JOptionPane.showMessageDialog(null, "Aktivasi Berhasil");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Aktivasi Gagal");
+        }
+    }//GEN-LAST:event_tbActivationActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClear;
@@ -838,6 +884,7 @@ public class AdminView extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panelRole;
     private javax.swing.JScrollPane scrlEmp;
     private javax.swing.JScrollPane scrlUser;
+    private javax.swing.JButton tbActivation;
     private javax.swing.JTable tbEmp;
     private javax.swing.JTable tbUser;
     private javax.swing.JTextField tfEmpAdrress;
