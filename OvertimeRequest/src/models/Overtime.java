@@ -41,6 +41,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Overtime.findByStatus", query = "SELECT o FROM Overtime o WHERE o.status = :status")})
 public class Overtime implements Serializable {
 
+    @JoinColumn(name = "STATUS", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Status status;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -54,7 +58,7 @@ public class Overtime implements Serializable {
     @Column(name = "KETERANGAN")
     private String keterangan;
     @Column(name = "STATUS")
-    private BigInteger status;
+//    private String status;
     @OneToMany(mappedBy = "overtime", fetch = FetchType.LAZY)
     private List<Task> taskList;
     @JoinColumn(name = "TIME_SHEET", referencedColumnName = "ID")
@@ -68,7 +72,7 @@ public class Overtime implements Serializable {
         this.id = id;
     }
 
-    public Overtime(String id, Date overtimeDate, BigInteger timeDuration, String keterangan, BigInteger status, TimeSheet timeSheet) {
+    public Overtime(String id, Date overtimeDate, BigInteger timeDuration, String keterangan, Status status, TimeSheet timeSheet) {
         this.id = id;
         this.overtimeDate = overtimeDate;
         this.timeDuration = timeDuration;
@@ -111,13 +115,13 @@ public class Overtime implements Serializable {
         this.keterangan = keterangan;
     }
 
-    public BigInteger getStatus() {
-        return status;
-    }
-
-    public void setStatus(BigInteger status) {
-        this.status = status;
-    }
+//    public BigInteger getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(BigInteger status) {
+//        this.status = status;
+//    }
 
     @XmlTransient
     public List<Task> getTaskList() {
@@ -135,6 +139,8 @@ public class Overtime implements Serializable {
     public void setTimeSheet(TimeSheet timeSheet) {
         this.timeSheet = timeSheet;
     }
+    
+    
 
     @Override
     public int hashCode() {
@@ -159,6 +165,14 @@ public class Overtime implements Serializable {
     @Override
     public String toString() {
         return "models.Overtime[ id=" + id + " ]";
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
     
 }

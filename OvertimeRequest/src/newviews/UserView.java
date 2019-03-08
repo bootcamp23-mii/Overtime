@@ -45,6 +45,8 @@ import views.OvertimeReportView;
  * @author milhamafemi
  */
 public class UserView extends javax.swing.JInternalFrame {
+
+    DefaultTableModel myTableModel = new DefaultTableModel();
     SessionFactory factory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTable = new DefaultTableModel();
     OvertimeControllerInterface oc = new OvertimeController(factory);
@@ -56,20 +58,20 @@ public class UserView extends javax.swing.JInternalFrame {
     Map param = new HashMap();
     JasperDesign JasDes;
     Connection c;
+
     /**
      * Creates new form UserView
      */
     public UserView() {
         initComponents();
-        List a = ec.getById(id).getTimeSheetList();
-        Employee u = ec.getById(id);
-        lblNik.setText(u.getId());
-        lblUsername.setText(u.getName());
-        tableData(a);
-        setukuran();
+//        List a = ec.getById(id).getTimeSheetList();
+//        Employee u = ec.getById(id);
+//        lblNik.setText(u.getId());
+//        lblUsername.setText(u.getName());
+//        tableData(a);
     }
 
-      private void setukuran() {
+    private void setukuran() {
         this.setSize(670, 510);
     }
 
@@ -94,7 +96,8 @@ public class UserView extends javax.swing.JInternalFrame {
         myTable = new DefaultTableModel(data, columnNames);
         tbEmployee.setModel(myTable);
     }
-     private void setColor(JPanel pane) {
+
+    private void setColor(JPanel pane) {
         pane.setBackground(new Color(41, 57, 80));
     }
 
@@ -108,13 +111,14 @@ public class UserView extends javax.swing.JInternalFrame {
         }
 
     }
-    
-     private void getRidTheBar() {
+
+    private void getRidTheBar() {
         putClientProperty("Home.isPallete", Boolean.TRUE);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -156,7 +160,6 @@ public class UserView extends javax.swing.JInternalFrame {
 
         setMinimumSize(new java.awt.Dimension(930, 620));
         setPreferredSize(new java.awt.Dimension(930, 620));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         dynamicPane.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -186,7 +189,7 @@ public class UserView extends javax.swing.JInternalFrame {
         jLabel5.setText("History");
         pnHistory.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, -1, -1));
 
-        dynamicPane.add(pnHistory, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, 590, 430));
+        dynamicPane.add(pnHistory, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, 610, 430));
 
         pnUserSession.setBackground(new java.awt.Color(153, 204, 255));
         pnUserSession.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -199,7 +202,7 @@ public class UserView extends javax.swing.JInternalFrame {
         lblNik.setText("NIK");
         pnUserSession.add(lblNik, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, -1, -1));
 
-        dynamicPane.add(pnUserSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 100));
+        dynamicPane.add(pnUserSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 100));
 
         pnEmpReport.setBackground(new java.awt.Color(204, 204, 204));
         pnEmpReport.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -251,8 +254,6 @@ public class UserView extends javax.swing.JInternalFrame {
         pnEmpReport.add(pnOvtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 260, 60));
 
         dynamicPane.add(pnEmpReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 180, 430));
-
-        getContentPane().add(dynamicPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 770, 530));
 
         pnMenu.setBackground(new java.awt.Color(51, 153, 255));
         pnMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -365,19 +366,39 @@ public class UserView extends javax.swing.JInternalFrame {
 
         pnMenu.add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 130, 50));
 
-        getContentPane().add(pnMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 140, 590));
-
         pnHias1.setBackground(new java.awt.Color(51, 153, 255));
         pnHias1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(pnHias1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 10, 590));
 
         pnHias2.setBackground(new java.awt.Color(255, 255, 255));
         pnHias2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(pnHias2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 790, 20));
 
         pnHias3.setBackground(new java.awt.Color(51, 153, 255));
         pnHias3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(pnHias3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 790, 40));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(pnHias1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnHias3, javax.swing.GroupLayout.PREFERRED_SIZE, 790, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnHias2, javax.swing.GroupLayout.PREFERRED_SIZE, 790, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dynamicPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnHias1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnHias3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(pnHias2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(dynamicPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -395,8 +416,8 @@ public class UserView extends javax.swing.JInternalFrame {
         param.put("id", id);
         try {
             c = factory.
-            getSessionFactoryOptions().getServiceRegistry().
-            getService(ConnectionProvider.class).getConnection();
+                    getSessionFactoryOptions().getServiceRegistry().
+                    getService(ConnectionProvider.class).getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ManagerMainView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -426,7 +447,7 @@ public class UserView extends javax.swing.JInternalFrame {
 
     private void btnHomeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMousePressed
         // TODO add your handling code here:
-                setColor(btnHome);
+        setColor(btnHome);
         ind_1.setOpaque(true);
         resetColor(new JPanel[]{btnHistory, btnAbout, btnLogout}, new JPanel[]{ind_2, ind_3, ind_4});
 //         pnHome.setVisible(true);
@@ -448,7 +469,7 @@ public class UserView extends javax.swing.JInternalFrame {
 
     private void btnAboutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAboutMousePressed
         // TODO add your handling code here:
-                  setColor(btnAbout);
+        setColor(btnAbout);
         ind_3.setOpaque(true);
         resetColor(new JPanel[]{btnHistory, btnHistory, btnLogout}, new JPanel[]{ind_2, ind_1, ind_4});
 //         pnHome.setVisible(true);
@@ -459,7 +480,7 @@ public class UserView extends javax.swing.JInternalFrame {
 
     private void btnLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMousePressed
         // TODO add your handling code here:
-                  setColor(btnLogout);
+        setColor(btnLogout);
         ind_4.setOpaque(true);
         resetColor(new JPanel[]{btnHistory, btnAbout, btnHome}, new JPanel[]{ind_2, ind_3, ind_1});
 //         pnHome.setVisible(true);

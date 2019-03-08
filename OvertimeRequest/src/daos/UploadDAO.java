@@ -42,7 +42,7 @@ public class UploadDAO {
 
     public boolean upload(UploadDB d) {
         boolean result = false;
-        String query = "INSERT INTO UPLOAD (ID,PHOTO) VALUES(?,?)";
+        String query = "INSERT INTO UPLOAD (ID,upload) VALUES(1,?)";
         
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -57,7 +57,7 @@ public class UploadDAO {
     }
     public boolean replace(UploadDB d) {
         boolean result = false;
-        String query = "UPDATE UPLOAD SET PHOTO = ? WHERE ID = ?";
+        String query = "UPDATE UPLOAD SET upload = ? WHERE ID = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);

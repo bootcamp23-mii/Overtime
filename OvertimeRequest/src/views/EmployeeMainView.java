@@ -13,12 +13,15 @@ import controllers.TimeSheetController;
 import controllers.TimeSheetControllerInterface;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import models.Employee;
 import models.Overtime;
 import models.Sessions;
@@ -56,6 +59,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     Map param = new HashMap();
     JasperDesign JasDes;
     Connection c;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
     public EmployeeMainView() {
         initComponents();
@@ -66,7 +70,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         tableData(a);
         setukuran();
         pmMonth.setToolTipText("MM");
-      
+
     }
 
     private void setukuran() {
@@ -75,18 +79,18 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
     private void tableData(List<TimeSheet> ts) {
 //        jobs = jc.getAll();
-        Object[] columnNames = {"Nomor", "Id", "Overtime Date", "Duration", "Status"};
+        Object[] columnNames = {"Nomor", "Overtime Date", "Duration", "Status"};
 
         Object[][] data = new Object[ts.size()][columnNames.length];
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-            data[i][1] = ts.get(i).getId();
+//            data[i][1] = ts.get(i).getId();
             for (Object obj : tc.getByid(ts.get(i).getId()).getOvertimeList()) {
                 Overtime overtime = (Overtime) obj;
-                data[i][2] = overtime.getOvertimeDate();
-                data[i][3] = overtime.getTimeDuration();
-                data[i][4] = overtime.getStatus();
+                data[i][1] = dateFormat.format(overtime.getOvertimeDate());
+                data[i][2] = overtime.getTimeDuration();
+                data[i][3] = overtime.getStatus().getStatus();
 //      
 
             }
@@ -94,10 +98,10 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         myTable = new DefaultTableModel(data, columnNames);
         tbEmployee.setModel(myTable);
     }
-    
-        private void tableData2(List<TimeSheet> ts) {
+
+    private void tableData2(List<TimeSheet> ts) {
 //        jobs = jc.getAll();
-        
+
         Object[] columnNames = {"Nomor", "Id", "Overtime Date", "Duration", "Status"};
 
         Object[][] data = new Object[ts.size()][columnNames.length];
@@ -225,7 +229,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 btOtReportActionPerformed(evt);
             }
         });
-        pnManagerMain.add(btOtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 70, 30));
+        pnManagerMain.add(btOtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 70, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Show Overtime Report");
@@ -242,14 +246,14 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 pmMonthKeyTyped(evt);
             }
         });
-        pnManagerMain.add(pmMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 70, 30));
+        pnManagerMain.add(pmMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 70, 30));
 
         jMonth.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMonthMouseClicked(evt);
             }
         });
-        pnManagerMain.add(jMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 170, -1, -1));
+        pnManagerMain.add(jMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, 30));
 
         getContentPane().add(pnManagerMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 655, 384));
 
@@ -293,9 +297,9 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     private void btOtReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOtReportActionPerformed
         // TODO add your handling code here:
         System.out.println(jMonth.getMonth());
-        
+
         param.put("id", id);
-        param.put("pmMonth", String.valueOf(jMonth.getMonth()+1));
+        param.put("pmMonth", String.valueOf(jMonth.getMonth() + 1));
         try {
             c = factory.
                     getSessionFactoryOptions().getServiceRegistry().
@@ -320,6 +324,11 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMonthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMonthMouseClicked
+        // TODO add your handling code here:
+        System.out.println(String.valueOf(jMonth.getMonth()));
+    }//GEN-LAST:event_jMonthMouseClicked
+
     private void pmMonthKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pmMonthKeyTyped
         // TODO add your handling code here:
         pmMonth.setToolTipText("MM");
@@ -329,11 +338,6 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         pmMonth.setToolTipText("abcdefgg");
     }//GEN-LAST:event_pmMonthFocusGained
-
-    private void jMonthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMonthMouseClicked
-        // TODO add your handling code here:
-        System.out.println(String.valueOf(jMonth.getMonth()));
-    }//GEN-LAST:event_jMonthMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

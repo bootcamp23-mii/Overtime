@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Overtime;
+import models.Status;
 import models.TimeSheet;
 import org.hibernate.SessionFactory;
 
@@ -39,7 +40,7 @@ public class OvertimeController implements OvertimeControllerInterface{
             Logger.getLogger(OvertimeController.class.getName()).log(Level.SEVERE, null, ex);
         }       
         
-        if (dao.saveOrDelete(new Overtime(id, a, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
+        if (dao.saveOrDelete(new Overtime(id, a, new BigInteger(timeDuration), keterangan, new Status(status), new TimeSheet(timeSheet)),true)) {
              return " Selamat data berhasil disimpan";
         }     
          return "Maaf coba lagi";
@@ -64,7 +65,7 @@ public class OvertimeController implements OvertimeControllerInterface{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date Otdate = dateFormat.parse(overtimeDate);
-            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),true)) {
+            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new Status(status), new TimeSheet(timeSheet)),true)) {
              return " Selamat data berhasil diubah";
         }           
         } catch (Exception e) {
@@ -78,7 +79,7 @@ public class OvertimeController implements OvertimeControllerInterface{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
             Date Otdate = dateFormat.parse(overtimeDate);
-            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new BigInteger(status), new TimeSheet(timeSheet)),false)) {
+            if (dao.saveOrDelete(new Overtime(id, Otdate, new BigInteger(timeDuration), keterangan, new Status(status), new TimeSheet(timeSheet)),false)) {
              return " Data telah dihapus!";
         }           
         } catch (Exception e) {

@@ -60,5 +60,6 @@ Contributor(s):
     <mapping class="models.Task"/>
     <mapping class="models.TimeSheet"/>
     <mapping class="models.Users"/>
+    <mapping class="models.Status"/>
   </session-factory>
 </hibernate-configuration>

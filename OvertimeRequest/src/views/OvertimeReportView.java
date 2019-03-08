@@ -13,15 +13,25 @@ import controllers.TaskController;
 import controllers.TaskControllerInterface;
 import controllers.TimeSheetController;
 import controllers.TimeSheetControllerInterface;
+import controllers.UploadDBController;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import models.Employee;
 import models.Overtime;
 import models.Sessions;
 import models.Task;
 import models.TimeSheet;
+import models.UploadDB;
 import org.hibernate.SessionFactory;
 import tools.HibernateUtil;
+import views.DBConnection;
 
 /**
  *
@@ -32,6 +42,14 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     /**
      * Creates new form OvertimeReportView
      */
+    private DBConnection connection = new DBConnection();
+//    private SessionFactory factory = HibernateUtil.getSessionFactory();
+//    private UploadControllerInterface c = new UploadController(factory);
+    private UploadDBController cc = new UploadDBController(connection.getConnection());
+
+//    private List<Upload> list = new ArrayList<>();
+    private List<UploadDB> listUp = new ArrayList<>();
+    private NewJInternalFrame fc = new NewJInternalFrame();
     SessionFactory factory = HibernateUtil.getSessionFactory();
     OvertimeControllerInterface oc = new OvertimeController(factory);
     String id = Sessions.getId();
@@ -42,6 +60,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public OvertimeReportView() {
+        setDefaultCondition();
         initComponents();
         setData(idtab);
         Employee e = ec.getById(id);
@@ -56,6 +75,59 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         }
 
         jdSatu.setDateFormatString("yyyy-MM-dd");
+
+    }
+
+    private void setDefaultCondition() {
+
+//        list=c.search("14303");
+////        list=c.search(Session.getSession());
+//        if (!list.isEmpty()){
+////            serializable=;
+////             System.out.println(list.get(0).getPhoto().toString());
+////            blobPhoto = ;
+////            try {
+////                InputStream in = blobPhoto.getBinaryStream();  
+////                BufferedImage image = ImageIO.read(in);
+////                lblImage.setIcon(new ImageIcon(image));
+////                
+////            } catch (Exception e) {
+////                e.printStackTrace();
+////            }
+//            
+//            byte [] data = list.get(0).getPhoto();
+//            BufferedImage image = null;
+//            try {
+//            image = ImageIO.read(new ByteArrayInputStream(data));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            lblImage.setIcon(new ImageIcon(image));
+//        }
+    }
+
+    public void uploadToDB(File file) throws FileNotFoundException {
+        listUp = cc.seachBy(Sessions.getId());
+        if (listUp.isEmpty()) {
+            cc.upload(Sessions.getId(), fc.getSelectedFile());
+            JOptionPane.showMessageDialog(null, "Upload sukses");
+        } else {
+            cc.replace(Sessions.getId(), fc.getSelectedFile());
+            JOptionPane.showMessageDialog(null, "Upload ganti gambar sukses");
+        }
+
+    }
+
+    public void setImagetoLabel(File imageFile) {
+//        try {
+//            JOptionPane.showMessageDialog(null, imageFile.getAbsolutePath());
+//            lblImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+//            lblImage.setIcon(new javax.swing.ImageIcon(imageFile.getAbsolutePath()));
+////            lblImage.setIcon(new ImageIcon(image));
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+
     }
 
     private void setukuran() {
@@ -83,7 +155,33 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         jdSatu.cleanup();
         tfTask.setText("");
         taDetail.setText("");
+    }
 
+    void filterhuruf(KeyEvent a) {
+        if (Character.isAlphabetic(a.getKeyChar())) {
+            a.consume();
+            JOptionPane.showMessageDialog(null, "Pada Kolom Jumlah Hanya Bisa Memasukan Karakter Angka");
+        }
+    }
+
+    public Date setTanggal() {
+        java.util.Date skrg = new java.util.Date();
+        java.text.SimpleDateFormat kal = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return skrg;
+    }
+    
+    public int getMonth(Date a){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(a);
+            int month = cal.get(Calendar.MONTH);
+            return month;
+    }
+    
+    public int getDay(Date a){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(a);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            return day;
     }
 
     /**
@@ -95,6 +193,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -115,6 +214,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
         jdSatu = new com.toedter.calendar.JDateChooser();
+        jLabel9 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(199, 220, 236));
 
@@ -152,6 +252,11 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         tfName.setForeground(new java.awt.Color(128, 137, 149));
 
         tfTimeDuration.setCaretColor(new java.awt.Color(128, 137, 149));
+        tfTimeDuration.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfTimeDurationKeyTyped(evt);
+            }
+        });
 
         tfTask.setForeground(new java.awt.Color(128, 137, 149));
 
@@ -179,6 +284,11 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         });
 
         jButton1.setText("Upload File");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         btDelete.setText("Delete");
         btDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -198,6 +308,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel9.setText("Catatan: Overtime hanya bisa diajukan pada bulan yang sama maksimal tanggal 28");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,7 +318,12 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
@@ -215,29 +332,29 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btDelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btSubmit)
-                                .addGap(3, 3, 3)
-                                .addComponent(btCancel))
-                            .addComponent(tfTask, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(tfNik, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfTimeDuration, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jdSatu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(36, 36, 36))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btDelete)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btSubmit)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(btCancel))
+                                    .addComponent(tfTask, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(tfNik, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfTimeDuration, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jdSatu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(36, 36, 36)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -279,7 +396,9 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                     .addComponent(btCancel)
                     .addComponent(jButton1)
                     .addComponent(btDelete))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -292,34 +411,49 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
         // TODO add your handling code here:
 
-        String date = sdf.format(jdSatu.getDate());
+        if (Integer.parseInt(tfTimeDuration.getText()) < 2 || Integer.parseInt(tfTimeDuration.getText()) > 20) {
+            JOptionPane.showMessageDialog(null, "Durasi Overtime minimal 2 jam dan maksimal 20 jam");
+        } else {
+            
+            
+            if( getMonth(jdSatu.getDate()) < getMonth(setTanggal()) && getDay(jdSatu.getDate())<=27 
+                    || getMonth(jdSatu.getDate()) == getMonth(setTanggal()) && getDay(jdSatu.getDate())>27
+                    || getMonth(jdSatu.getDate())> getMonth(setTanggal())){
+                JOptionPane.showMessageDialog(null, "Tanggal salah");
+            }
+            else{
+
+            String date = sdf.format(jdSatu.getDate());
+            
 
 //        System.out.println(t.getId());
-        if (idtab != "") {
-            if (tc.getByid(idtab).getOvertimeList().get(0).getStatus().toString() != "0") {
-                JOptionPane.showMessageDialog(null, "Data sudah Diproses");
-            } else {
-                Overtime x = oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId());
+            if (idtab != "") {
+                if (tc.getByid(idtab).getOvertimeList().get(0).getStatus().toString() != "0") {
+                    JOptionPane.showMessageDialog(null, "Data sudah Diproses");
+                } else {
+                    Overtime x = oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId());
 //        System.out.println(x.getId());
-                Task t = tic.getByid(oc.getById(x.getId()).getTaskList().get(0).getId());
-                tc.save(idtab, date.toString(), ec.getById(id).getName(), id);
-                oc.insert(tc.getByid(idtab).getOvertimeList().get(0).getId(), date.toString(), tfTimeDuration.getText(), taDetail.getText(), "0", idtab);
-                JOptionPane.showMessageDialog(null, tic.save(t.getId(), tfTask.getText(), x.getId()));
+                    Task t = tic.getByid(oc.getById(x.getId()).getTaskList().get(0).getId());
+                    tc.save(idtab, date.toString(), ec.getById(id).getName(), id);
+                    oc.insert(tc.getByid(idtab).getOvertimeList().get(0).getId(), date.toString(), tfTimeDuration.getText(), taDetail.getText(), "S03", idtab);
+                    JOptionPane.showMessageDialog(null, tic.save(t.getId(), tfTask.getText(), x.getId()));
+                    this.setVisible(false);
+                    EmployeeMainView op = new EmployeeMainView();
+                    this.getParent().add(op);
+                    op.setVisible(true);
+                    idtab = "";
+                }
+            } else {
+                tc.save("TS02", date.toString(), ec.getById(id).getName(), id);
+                oc.insert("o002", date.toString(), tfTimeDuration.getText(), taDetail.getText(), "S03", tc.last().getId());
+                JOptionPane.showMessageDialog(null, tic.save("T02", tfTask.getText(), oc.last().getId()));
                 this.setVisible(false);
                 EmployeeMainView op = new EmployeeMainView();
                 this.getParent().add(op);
                 op.setVisible(true);
                 idtab = "";
             }
-        } else {
-            tc.save("TS02", date.toString(), ec.getById(id).getName(), id);
-            oc.insert("o002", date.toString(), tfTimeDuration.getText(), taDetail.getText(), "0", tc.last().getId());
-            JOptionPane.showMessageDialog(null, tic.save("T02", tfTask.getText(), oc.last().getId()));
-            this.setVisible(false);
-            EmployeeMainView op = new EmployeeMainView();
-            this.getParent().add(op);
-            op.setVisible(true);
-            idtab = "";
+            }
         }
 
 
@@ -369,12 +503,26 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_jdSatuMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        NewJInternalFrame nif = new NewJInternalFrame();
+        this.getParent().add(nif);
+        nif.setVisible(true);
+        this.revalidate();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void tfTimeDurationKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfTimeDurationKeyTyped
+        // TODO add your handling code here:
+        filterhuruf(evt);
+    }//GEN-LAST:event_tfTimeDurationKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btDelete;
     private javax.swing.JButton btSubmit;
     private javax.swing.JButton jButton1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -383,6 +531,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private com.toedter.calendar.JDateChooser jdSatu;
