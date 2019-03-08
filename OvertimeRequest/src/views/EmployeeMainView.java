@@ -67,6 +67,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         Employee u = ec.getById(id);
         lblNik.setText(u.getId());
         lblUsername.setText(u.getName());
+        lblManager.setText("Manager: " + u.getManager().getName());
         tableData(a);
         setukuran();
         pmMonth.setToolTipText("MM");
@@ -138,6 +139,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         pnUser = new javax.swing.JPanel();
         lblNik = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
+        lblManager = new javax.swing.JLabel();
         spTableManager = new javax.swing.JScrollPane();
         tbEmployee = new javax.swing.JTable();
         btReport = new javax.swing.JButton();
@@ -173,24 +175,35 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         lblUsername.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         lblUsername.setText("Username");
 
+        lblManager.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblManager.setText("Manager");
+
         javax.swing.GroupLayout pnUserLayout = new javax.swing.GroupLayout(pnUser);
         pnUser.setLayout(pnUserLayout);
         pnUserLayout.setHorizontalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnUserLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                    .addComponent(lblNik, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnUserLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnUserLayout.createSequentialGroup()
+                        .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblManager))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         pnUserLayout.setVerticalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnUserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(lblManager)
+                .addContainerGap())
         );
 
         pnManagerMain.add(pnUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 86, 210, -1));
@@ -259,7 +272,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
         miManager.setText("MENU");
 
-        jMenuItem1.setText("Exit");
+        jMenuItem1.setText("Logout");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -321,7 +334,11 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        this.setVisible(false);
+        LoginView lv = new LoginView();
+        this.getParent().add(lv);
+        lv.setVisible(true);
+        Sessions.setId("");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMonthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMonthMouseClicked
@@ -347,6 +364,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private com.toedter.calendar.JMonthChooser jMonth;
+    private javax.swing.JLabel lblManager;
     private javax.swing.JLabel lblNik;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;
