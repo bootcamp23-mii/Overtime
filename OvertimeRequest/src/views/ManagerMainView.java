@@ -73,6 +73,11 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblNik.setText(u.getId());
         lblUsername.setText(u.getName());
         tableData(gdao.getByKarByMang(id));
+        setukuran();
+    }
+    
+    private void setukuran() {
+        this.setSize(670, 510);
     }
 
     private void tableData(List<Employee> ts) {

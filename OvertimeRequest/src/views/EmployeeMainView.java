@@ -65,6 +65,8 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         lblUsername.setText(u.getName());
         tableData(a);
         setukuran();
+        pmMonth.setToolTipText("MM");
+      
     }
 
     private void setukuran() {
@@ -73,6 +75,29 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
     private void tableData(List<TimeSheet> ts) {
 //        jobs = jc.getAll();
+        Object[] columnNames = {"Nomor", "Id", "Overtime Date", "Duration", "Status"};
+
+        Object[][] data = new Object[ts.size()][columnNames.length];
+
+        for (int i = 0; i < data.length; i++) {
+            data[i][0] = (i + 1);
+            data[i][1] = ts.get(i).getId();
+            for (Object obj : tc.getByid(ts.get(i).getId()).getOvertimeList()) {
+                Overtime overtime = (Overtime) obj;
+                data[i][2] = overtime.getOvertimeDate();
+                data[i][3] = overtime.getTimeDuration();
+                data[i][4] = overtime.getStatus();
+//      
+
+            }
+        }
+        myTable = new DefaultTableModel(data, columnNames);
+        tbEmployee.setModel(myTable);
+    }
+    
+        private void tableData2(List<TimeSheet> ts) {
+//        jobs = jc.getAll();
+        
         Object[] columnNames = {"Nomor", "Id", "Overtime Date", "Duration", "Status"};
 
         Object[][] data = new Object[ts.size()][columnNames.length];
@@ -113,6 +138,9 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         tbEmployee = new javax.swing.JTable();
         btReport = new javax.swing.JButton();
         btOtReport = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        pmMonth = new javax.swing.JTextField();
+        jMonth = new com.toedter.calendar.JMonthChooser();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -158,7 +186,7 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(26, 26, 26))
         );
 
         pnManagerMain.add(pnUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 86, 210, -1));
@@ -189,15 +217,39 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
                 btReportActionPerformed(evt);
             }
         });
-        pnManagerMain.add(btReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, 33));
+        pnManagerMain.add(btReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 140, 33));
 
-        btOtReport.setText("Overtime Report");
+        btOtReport.setText("Report");
         btOtReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btOtReportActionPerformed(evt);
             }
         });
-        pnManagerMain.add(btOtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 120, 33));
+        pnManagerMain.add(btOtReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 70, 30));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText("Show Overtime Report");
+        pnManagerMain.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
+
+        pmMonth.setToolTipText("MM");
+        pmMonth.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                pmMonthFocusGained(evt);
+            }
+        });
+        pmMonth.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                pmMonthKeyTyped(evt);
+            }
+        });
+        pnManagerMain.add(pmMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 70, 30));
+
+        jMonth.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMonthMouseClicked(evt);
+            }
+        });
+        pnManagerMain.add(jMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 170, -1, -1));
 
         getContentPane().add(pnManagerMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 655, 384));
 
@@ -240,7 +292,10 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
     private void btOtReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOtReportActionPerformed
         // TODO add your handling code here:
+        System.out.println(jMonth.getMonth());
+        
         param.put("id", id);
+        param.put("pmMonth", String.valueOf(jMonth.getMonth()+1));
         try {
             c = factory.
                     getSessionFactoryOptions().getServiceRegistry().
@@ -265,17 +320,35 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void pmMonthKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pmMonthKeyTyped
+        // TODO add your handling code here:
+        pmMonth.setToolTipText("MM");
+    }//GEN-LAST:event_pmMonthKeyTyped
+
+    private void pmMonthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pmMonthFocusGained
+        // TODO add your handling code here:
+        pmMonth.setToolTipText("abcdefgg");
+    }//GEN-LAST:event_pmMonthFocusGained
+
+    private void jMonthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMonthMouseClicked
+        // TODO add your handling code here:
+        System.out.println(String.valueOf(jMonth.getMonth()));
+    }//GEN-LAST:event_jMonthMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btOtReport;
     private javax.swing.JButton btReport;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private com.toedter.calendar.JMonthChooser jMonth;
     private javax.swing.JLabel lblNik;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JMenu miManager;
+    private javax.swing.JTextField pmMonth;
     private javax.swing.JPanel pnManagerMain;
     private javax.swing.JPanel pnUser;
     private javax.swing.JSeparator spMain;

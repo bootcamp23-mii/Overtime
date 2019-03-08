@@ -13,6 +13,7 @@ import controllers.TaskController;
 import controllers.TaskControllerInterface;
 import controllers.TimeSheetController;
 import controllers.TimeSheetControllerInterface;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import models.Employee;
 import models.Overtime;
@@ -38,6 +39,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     TimeSheetControllerInterface tc = new TimeSheetController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
     TaskControllerInterface tic = new TaskController(factory);
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public OvertimeReportView() {
         initComponents();
@@ -52,6 +54,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         } else {
             btDelete.setEnabled(false);
         }
+
+        jdSatu.setDateFormatString("yyyy-MM-dd");
     }
 
     private void setukuran() {
@@ -60,11 +64,14 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
     public void setData(String idTabel) {
         if (idTabel != "") {
+
             Employee e = ec.getById(id);
+            Task t = tic.getByid(oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId()).getTaskList().get(0).getId());
             tfNik.setText(id);
             tfName.setText(e.getName());
             tfTimeDuration.setText((tc.getByid(idtab).getOvertimeList().get(0).getTimeDuration()).toString());
-            tfDate.setText((tc.getByid(idtab).getOvertimeList().get(0).getOvertimeDate()).toString());
+            jdSatu.setDate((tc.getByid(idtab).getOvertimeList().get(0).getOvertimeDate()));
+            tfTask.setText(t.getName());
             taDetail.setText(tc.getByid(idtab).getOvertimeList().get(0).getKeterangan());
         }
     }
@@ -73,7 +80,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         tfNik.setText("");
         tfName.setText("");
         tfTimeDuration.setText("");
-        tfDate.setText("");
+        jdSatu.cleanup();
         tfTask.setText("");
         taDetail.setText("");
 
@@ -100,7 +107,6 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         tfNik = new javax.swing.JTextField();
         tfName = new javax.swing.JTextField();
         tfTimeDuration = new javax.swing.JTextField();
-        tfDate = new javax.swing.JTextField();
         tfTask = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         taDetail = new javax.swing.JTextArea();
@@ -108,6 +114,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         btCancel = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
+        jdSatu = new com.toedter.calendar.JDateChooser();
 
         setBackground(new java.awt.Color(199, 220, 236));
 
@@ -146,9 +153,6 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
         tfTimeDuration.setCaretColor(new java.awt.Color(128, 137, 149));
 
-        tfDate.setForeground(new java.awt.Color(128, 137, 149));
-        tfDate.setToolTipText("YYYY-MM-DD");
-
         tfTask.setForeground(new java.awt.Color(128, 137, 149));
 
         taDetail.setColumns(20);
@@ -183,6 +187,17 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             }
         });
 
+        jdSatu.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                jdSatuComponentAdded(evt);
+            }
+        });
+        jdSatu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jdSatuMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -191,11 +206,6 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -214,15 +224,20 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                                 .addComponent(btSubmit)
                                 .addGap(3, 3, 3)
                                 .addComponent(btCancel))
-                            .addComponent(tfDate, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tfTask, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(tfNik, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfTimeDuration, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(36, 36, 36)))
+                            .addComponent(tfTimeDuration, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdSatu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(36, 36, 36))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -247,10 +262,10 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                     .addComponent(jLabel5)
                     .addComponent(tfTimeDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(jdSatu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(tfTask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -264,7 +279,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                     .addComponent(btCancel)
                     .addComponent(jButton1)
                     .addComponent(btDelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -277,6 +292,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
         // TODO add your handling code here:
 
+        String date = sdf.format(jdSatu.getDate());
+
 //        System.out.println(t.getId());
         if (idtab != "") {
             if (tc.getByid(idtab).getOvertimeList().get(0).getStatus().toString() != "0") {
@@ -285,14 +302,24 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
                 Overtime x = oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId());
 //        System.out.println(x.getId());
                 Task t = tic.getByid(oc.getById(x.getId()).getTaskList().get(0).getId());
-                tc.save(idtab, tfDate.getText(), ec.getById(id).getName(), id);
-                oc.insert(tc.getByid(idtab).getOvertimeList().get(0).getId(), tfDate.getText(), tfTimeDuration.getText(), taDetail.getText(), "0", idtab);
+                tc.save(idtab, date.toString(), ec.getById(id).getName(), id);
+                oc.insert(tc.getByid(idtab).getOvertimeList().get(0).getId(), date.toString(), tfTimeDuration.getText(), taDetail.getText(), "0", idtab);
                 JOptionPane.showMessageDialog(null, tic.save(t.getId(), tfTask.getText(), x.getId()));
+                this.setVisible(false);
+                EmployeeMainView op = new EmployeeMainView();
+                this.getParent().add(op);
+                op.setVisible(true);
+                idtab = "";
             }
         } else {
-            tc.save("TS02", tfDate.getText(), ec.getById(id).getName(), id);
-            oc.insert("o002", tfDate.getText(), tfTimeDuration.getText(), taDetail.getText(), "0", tc.last().getId());
+            tc.save("TS02", date.toString(), ec.getById(id).getName(), id);
+            oc.insert("o002", date.toString(), tfTimeDuration.getText(), taDetail.getText(), "0", tc.last().getId());
             JOptionPane.showMessageDialog(null, tic.save("T02", tfTask.getText(), oc.last().getId()));
+            this.setVisible(false);
+            EmployeeMainView op = new EmployeeMainView();
+            this.getParent().add(op);
+            op.setVisible(true);
+            idtab = "";
         }
 
 
@@ -332,6 +359,16 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_btDeleteActionPerformed
 
+    private void jdSatuComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jdSatuComponentAdded
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jdSatuComponentAdded
+
+    private void jdSatuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jdSatuMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jdSatuMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancel;
@@ -348,8 +385,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private com.toedter.calendar.JDateChooser jdSatu;
     private javax.swing.JTextArea taDetail;
-    private javax.swing.JTextField tfDate;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfNik;
     private javax.swing.JTextField tfTask;
