@@ -179,7 +179,7 @@ public class LoginView extends javax.swing.JInternalFrame {
                 this.getParent().add(ev);
                 ev.setVisible(true);
             } else {
-                AccountActivation av = new AccountActivation();
+                AdminView av = new AdminView();
                 this.getParent().add(av);
                 av.setVisible(true);
             }

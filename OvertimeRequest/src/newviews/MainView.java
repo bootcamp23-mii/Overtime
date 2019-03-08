@@ -7,8 +7,12 @@ package newviews;
 
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
+import controllers.RoleController;
+import controllers.RoleControllerInterface;
 import controllers.UserController;
 import controllers.UserControllerInterface;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Employee;
@@ -25,15 +29,21 @@ import views.ManagerMainView;
  */
 public class MainView extends javax.swing.JFrame {
 
+    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
     SessionFactory factory = HibernateUtil.getSessionFactory();
     DefaultTableModel myTable = new DefaultTableModel();
     UserControllerInterface uc = new UserController(factory);
     EmployeeControllerInterface ec = new EmployeeController(factory);
+    RoleControllerInterface rc = new RoleController(factory);
+
     /**
      * Creates new form LoginOrRegisterView
      */
     public MainView() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        pnActivation.setVisible(false);
     }
 
     /**
@@ -45,7 +55,6 @@ public class MainView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        MainPanel = new javax.swing.JPanel();
         pnLoginOrRegister = new javax.swing.JPanel();
         lblOr = new javax.swing.JLabel();
         btRegister = new javax.swing.JButton();
@@ -68,16 +77,13 @@ public class MainView extends javax.swing.JFrame {
         btActiveAccount = new javax.swing.JButton();
         btCancelActAcc = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
+        mainPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setMaximumSize(null);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        MainPanel.setPreferredSize(new java.awt.Dimension(0, 0));
-        MainPanel.setLayout(new javax.swing.OverlayLayout(MainPanel));
-        getContentPane().add(MainPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pnLoginOrRegister.setBackground(new java.awt.Color(51, 153, 255));
 
@@ -233,7 +239,7 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(pnGimmickLayout.createSequentialGroup()
                 .addGap(84, 84, 84)
                 .addComponent(MII)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnGimmick, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 620));
@@ -306,6 +312,10 @@ public class MainView extends javax.swing.JFrame {
 
         getContentPane().add(pnActivation, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 310, 440, 310));
 
+        mainPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+        mainPanel.setLayout(new javax.swing.OverlayLayout(mainPanel));
+        getContentPane().add(mainPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -318,7 +328,11 @@ public class MainView extends javax.swing.JFrame {
         if ((uc.login(tfUsername.getText(), pass))) {
             JOptionPane.showMessageDialog(null, "Login Sukses.");
             this.setVisible(false);
-            String u = ec.getById(Sessions.getId()).getRoleList().get(0).getJob().getId();
+
+            System.out.println(Sessions.getId());
+            String x = ec.getById(Sessions.getId()).getRoleList().get(0).getId();
+            String u = rc.getByid(x).getJob().getId();
+            System.out.println(u);
             if (u.equals("J01")) {
                 ManagerMainView mv = new ManagerMainView();
                 this.getParent().add(mv);
@@ -328,16 +342,28 @@ public class MainView extends javax.swing.JFrame {
                 this.getParent().add(ev);
                 ev.setVisible(true);
             } else {
-                AdminView av = new AdminView();
-                this.getParent().add(av);
-                av.setVisible(true);
+//                AdminView av = new AdminView();
+//                this.getParent().add(av);
+//                av.setVisible(true);
+                UserView userView = new UserView();
+                mainPanel.add(userView);
+                pnActivation.setVisible(false);
+                pnGimmick.setVisible(false);
+                pnLogin.setVisible(false);
+                pnLoginOrRegister.setVisible(false);
+                userView.setVisible(true);
+                mainPanel.setVisible(true);
+                userView.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+                userView.revalidate();
+                dispose();
             }
-            //            Employee u = ec.getById(Sessions.getId());
+//            Employee u = ec.getById(Sessions.getId());
         } else {
             tfUsername.setText("");
             tfPassword.setText("");
             JOptionPane.showMessageDialog(null, "Username atau Password salah.");
         }
+
     }//GEN-LAST:event_btLoginActionPerformed
 
     private void btCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelActionPerformed
@@ -348,7 +374,7 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_btCancelActionPerformed
 
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
-        
+
         pnActivation.setVisible(true);
         pnLogin.setVisible(false);
 
@@ -364,10 +390,9 @@ public class MainView extends javax.swing.JFrame {
         // TODO add your handling code here:
         String z = tfNIK.getText();
         Employee a = ec.getById(z);
-        if(uc.save(a.getId(), a.getEmail()+a.getId(), a.getId())){
+        if (uc.save(a.getId(), a.getEmail() + a.getId(), a.getId())) {
             JOptionPane.showMessageDialog(null, "Aktivasi Berhasil");
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Aktivasi Gagal");
         }
     }//GEN-LAST:event_btActiveAccountActionPerformed
@@ -410,35 +435,21 @@ public class MainView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel MII;
-    private javax.swing.JPanel MainPanel;
     private javax.swing.JButton btActiveAccount;
     private javax.swing.JButton btCancel;
     private javax.swing.JButton btCancelActAcc;
     private javax.swing.JButton btLogin;
     private javax.swing.JButton btLogin1;
     private javax.swing.JButton btRegister;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JLabel lblOr;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel pnActivation;
     private javax.swing.JPanel pnGimmick;
     private javax.swing.JPanel pnLogin;

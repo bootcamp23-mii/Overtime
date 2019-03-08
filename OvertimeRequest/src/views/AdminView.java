@@ -9,6 +9,8 @@ import controllers.DivisionController;
 import controllers.DivisionControllerInterface;
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
+import controllers.JobController;
+import controllers.JobControllerInterface;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
 import controllers.RoleController;
@@ -21,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Division;
 import models.Employee;
+import models.Job;
 import models.Role;
 import models.Site;
 import org.hibernate.SessionFactory;
@@ -39,10 +42,12 @@ public class AdminView extends javax.swing.JInternalFrame {
     private RoleControllerInterface rci = new RoleController(sessionFactory);
     private EmployeeControllerInterface eci = new EmployeeController(sessionFactory);
     private List<Site> sites = new ArrayList<>();
-    private DivisionControllerInterface dci= new DivisionController(sessionFactory);
-    private SiteControllerInterface sci= new SiteController(sessionFactory);
+    private JobControllerInterface jci = new JobController(sessionFactory);
+    private DivisionControllerInterface dci = new DivisionController(sessionFactory);
+    private SiteControllerInterface sci = new SiteController(sessionFactory);
     private List<Division> divisions = new ArrayList<>();
     private List<Employee> employees = new ArrayList<>();
+    private List<models.Job> jobs = new ArrayList<>();
 
     /**
      * Creates new form AdminView
@@ -52,17 +57,28 @@ public class AdminView extends javax.swing.JInternalFrame {
         tableDataRole(rci.getAll());
         panelNewUser.setVisible(false);
         panelRole.setVisible(true);
+        showJob();
     }
 
     private void tableDataRole(List<Role> role) {
         Object[] columnNames = {"No", "ID", "Employee Name", "Job", "Role"};
         Object[][] data = new Object[role.size()][columnNames.length];
         for (int i = 0; i < data.length; i++) {
-            data[i][0] = (i + 1);
-            data[i][1] = role.get(i).getId();
-            data[i][2] = role.get(i).getEmployee().getName();
-            data[i][3] = role.get(i).getJob().getPosition();
-            data[i][4] = role.get(i).getName();
+            try {
+                data[i][0] = (i + 1);
+                data[i][1] = role.get(i).getId();
+                data[i][2] = role.get(i).getEmployee().getName();
+                data[i][3] = role.get(i).getJob().getPosition();
+//            if (role.get(i).getJob().getPosition() != null) {
+//                data[i][3] = role.get(i).getJob().getPosition() + "";
+//            } else {
+//                data[i][3] = "";
+//            }
+                data[i][4] = role.get(i).getName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         tableModelRole = new DefaultTableModel(data, columnNames);
         tbUser.setModel(tableModelRole);
@@ -99,24 +115,21 @@ public class AdminView extends javax.swing.JInternalFrame {
         return eci.getData(tfEmpId.getText()).isEmpty();
     }
 
-//    private void setComboBox() {
-//        for (Site site : sites) {
-//            cbSite.addItem(site.getId() + " - " + site.getName());
-//        }
-//        for (Division division : divisions) {
-//            cbDivision.addItem(division.getId() + " - " + division.getName());
-//        }
-//    }
-
     private void showSite() {
-        for (Site site : sites) {
-            cbSite.addItem(site.getId()+" - "+site.getName());
+        for (Site site : sci.getAll()) {
+            cbSite.addItem(site.getId() + " - " + site.getName());
+        }
+    }
+
+    private void showJob() {
+        for (Job job : jci.getAll()) {
+            cbJob.addItem(job.getId() + " - " + job.getPosition());
         }
     }
 
     private void showDivision() {
-        for (Division division : divisions) {
-            cbDivision.addItem(division.getId()+" - "+division.getName());
+        for (Division division : dci.getAll()) {
+            cbDivision.addItem(division.getId() + " - " + division.getName());
         }
     }
 
@@ -125,7 +138,7 @@ public class AdminView extends javax.swing.JInternalFrame {
                 || tfEmpName.getText().equals("")
                 || tfEmpAdrress.getText().equals("")
                 || tfEmpMail.getText().equals("")
-                || tfEmpManagerId.getText().equals("")
+                //                || tfEmpManagerId.getText().equals("")
                 || tfEmpSal.getText().equals("")
                 || cbSite.getSelectedIndex() == 0
                 || cbDivision.getSelectedIndex() == 0) {
@@ -162,6 +175,7 @@ public class AdminView extends javax.swing.JInternalFrame {
         btSave = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         tfRole = new javax.swing.JTextField();
+        cbJob = new javax.swing.JComboBox<>();
         panelNewUser = new javax.swing.JPanel();
         scrlEmp = new javax.swing.JScrollPane();
         tbEmp = new javax.swing.JTable();
@@ -221,6 +235,12 @@ public class AdminView extends javax.swing.JInternalFrame {
             }
         });
 
+        scrlUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                scrlUserMouseClicked(evt);
+            }
+        });
+
         tbUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -274,86 +294,103 @@ public class AdminView extends javax.swing.JInternalFrame {
 
         tfRole.setEditable(false);
 
+        cbJob.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+
         javax.swing.GroupLayout panelRoleLayout = new javax.swing.GroupLayout(panelRole);
         panelRole.setLayout(panelRoleLayout);
         panelRoleLayout.setHorizontalGroup(
             panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 631, Short.MAX_VALUE)
+            .addGroup(panelRoleLayout.createSequentialGroup()
+                .addContainerGap(401, Short.MAX_VALUE)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblSearch)
+                        .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                .addComponent(tfJob, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(22, 22, 22))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btFind, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                        .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(tfRole, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbJob, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
             .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelRoleLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(scrlUser, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
                     .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5)
                         .addGroup(panelRoleLayout.createSequentialGroup()
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblSearch)
-                                .addComponent(jLabel5))
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(panelRoleLayout.createSequentialGroup()
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel4))
-                            .addGap(18, 18, 18)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelRoleLayout.createSequentialGroup()
-                                    .addComponent(btSave, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(tfRole)
-                                .addComponent(tfJob)
-                                .addComponent(tfName)
-                                .addComponent(tfId)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
-                            .addGap(4, 4, 4)
-                            .addComponent(tfSearch)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btFind, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap()))
+                            .addComponent(jLabel1)
+                            .addGap(32, 32, 32)
+                            .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         panelRoleLayout.setVerticalGroup(
             panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 357, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRoleLayout.createSequentialGroup()
+                .addContainerGap(85, Short.MAX_VALUE)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbJob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btSave)
+                    .addComponent(btDelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSearch)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btFind))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btClear)
+                .addGap(50, 50, 50)
+                .addComponent(tfJob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
             .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelRoleLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(scrlUser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(scrlUser, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                         .addGroup(panelRoleLayout.createSequentialGroup()
                             .addComponent(jLabel5)
                             .addGap(18, 18, 18)
                             .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
                                 .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfJob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btSave)
-                                .addComponent(btDelete))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lblSearch)
-                            .addGap(9, 9, 9)
-                            .addGroup(panelRoleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btFind))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btClear)
-                            .addGap(0, 83, Short.MAX_VALUE)))
+                            .addGap(0, 0, Short.MAX_VALUE)))
                     .addContainerGap()))
         );
 
@@ -637,7 +674,7 @@ public class AdminView extends javax.swing.JInternalFrame {
                         "Are sure save the data?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
                 );
                 if (reply == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(null, rci.saveRoleId(tfId.getText()));
+                    JOptionPane.showMessageDialog(null, rci.save(tfId.getText(), tfRole.getText(), tfName.getText(), cbJob.getSelectedItem().toString().split(" - ")[0]));
                     tfSearch.setText("");
                     tableDataRole(rci.getAll());
                 }
@@ -655,9 +692,20 @@ public class AdminView extends javax.swing.JInternalFrame {
 
     private void tbUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbUserMouseClicked
         // TODO add your handling code here:
+        String temp = "";
         tfId.setText(tbUser.getValueAt(tbUser.getSelectedRow(), 1).toString());
         tfName.setText(tbUser.getValueAt(tbUser.getSelectedRow(), 2).toString());
-        tfJob.setText(tbUser.getValueAt(tbUser.getSelectedRow(), 3).toString());
+        for (Job job : jobs) {
+            if (job.getPosition().equals(tbUser.getValueAt(tbUser.getSelectedRow(), 3).toString())) {
+                temp = job.getId();
+            }
+        }
+        System.out.println(temp);
+        for (int i = 0; i < cbJob.getItemCount(); i++) {
+            if (cbJob.getItemAt(i).split(" - ")[0].equals(temp)) {
+                cbJob.setSelectedIndex(i);
+            }
+        }
         tfRole.setText(tbUser.getValueAt(tbUser.getSelectedRow(), 4).toString());
     }//GEN-LAST:event_tbUserMouseClicked
 
@@ -802,6 +850,10 @@ public class AdminView extends javax.swing.JInternalFrame {
         JOptionPane.showMessageDialog(null, "Application for Overtime Request", "About", HEIGHT);
     }//GEN-LAST:event_miAboutActionPerformed
 
+    private void scrlUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scrlUserMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scrlUserMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClear;
@@ -812,6 +864,7 @@ public class AdminView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btSave;
     private javax.swing.JButton btSearchEmp;
     private javax.swing.JComboBox<String> cbDivision;
+    private javax.swing.JComboBox<String> cbJob;
     private javax.swing.JComboBox<String> cbSite;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
