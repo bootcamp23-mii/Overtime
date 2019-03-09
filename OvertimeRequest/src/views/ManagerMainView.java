@@ -14,6 +14,7 @@ import controllers.TimeSheetControllerInterface;
 import daos.GeneralDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +64,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     JasperDesign JasDes;
     Connection c;
     String id = Sessions.getId();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+    SimpleDateFormat reFormat = new SimpleDateFormat("YYYY-MM-DD HH24:MI:SS");
 
     /**
      * Creates new form ManagerView
@@ -72,38 +75,31 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         Employee u = eci.getById(id);
         lblNik.setText(u.getId());
         lblUsername.setText(u.getName());
+        lblmanage.setText(u.getManager().getName());
         tableData(gdao.getByKarByMang(id));
         setukuran();
     }
-    
+
     private void setukuran() {
-        this.setSize(670, 510);
+        this.setSize(670, 540);
     }
 
-    private void tableData(List<Employee> ts) {
-        Object[] columnNames = {"Nomor", "Nama","id", "Email", "Id OT", "Overtime Date", "Duration", "TimeSheet", "Keterangan", "Status"};
-        Object[][] data = new Object[ts.size()][columnNames.length];
-        int i;
-        for (Employee employee : ts) {
-            for (TimeSheet timesheet : employee.getTimeSheetList()) {
-                for (Overtime overtime : timesheet.getOvertimeList()) {
-                    for (i = 0; i < data.length; i++) {
-                        data[i][0] = i + 1;
-                        data[i][1] = employee.getName();
-                        data[i][2] = employee.getId();
-                        data[i][3] = employee.getEmail();
-                        data[i][4] = overtime.getId();
-                        data[i][5] = overtime.getOvertimeDate();
-                        data[i][6] = overtime.getTimeDuration();
-                        data[i][7] = overtime.getTimeSheet().getId();
-                        data[i][8] = overtime.getKeterangan();
-                        data[i][9] = overtime.getStatus();
-                    }
-                }
+    private void tableData(List<Employee> emp) {
+        Object[] columnNames = {"Nomor", "Nama", "Id Emp", "Overtime Date", "Duration", "Status"};
+        Object[][] data = new Object[emp.size()][columnNames.length];
+        for (int i = 0; i < data.length; i++) {
+            for (Overtime overtime : (eci.getById(emp.get(i).getId())).getTimeSheetList().get(i).getOvertimeList()) {
+                data[i][0] = i + 1;
+                data[i][1] = overtime.getTimeSheet().getEmployee().getName();
+                data[i][2] = overtime.getTimeSheet().getEmployee().getId();
+                data[i][3] = overtime.getOvertimeDate();
+                data[i][4] = overtime.getTimeDuration();
+                data[i][5] = overtime.getStatus().getStatus();
             }
         }
         myTableModel = new DefaultTableModel(data, columnNames);
         tbManager.setModel(myTableModel);
+        
     }
 
     /**
@@ -122,6 +118,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         pnUser = new javax.swing.JPanel();
         lblNik = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
+        lblmanagedby = new javax.swing.JLabel();
+        lblmanage = new javax.swing.JLabel();
         spTableManager = new javax.swing.JScrollPane();
         tbManager = new javax.swing.JTable();
         btApprove = new javax.swing.JButton();
@@ -142,9 +140,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         tfKeterangan = new javax.swing.JTextField();
         btReject = new javax.swing.JButton();
         btClear = new javax.swing.JButton();
-        tfMonth2 = new javax.swing.JTextField();
-        tfMonth = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         btsend = new javax.swing.JButton();
@@ -152,13 +147,11 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblEmail = new javax.swing.JLabel();
         tfIdEmp = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        miManager = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        cbYear = new javax.swing.JComboBox<>();
+        cbMonth = new javax.swing.JComboBox<>();
+        lblyear = new javax.swing.JLabel();
+        lblMonth = new javax.swing.JLabel();
+        lblReport = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Manager Main");
@@ -176,28 +169,40 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         lblNik.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         lblNik.setText("NIK");
 
-        lblUsername.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
+        lblUsername.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         lblUsername.setText("Username");
+
+        lblmanagedby.setText("Managed By");
+
+        lblmanage.setText("UserManag");
 
         javax.swing.GroupLayout pnUserLayout = new javax.swing.GroupLayout(pnUser);
         pnUser.setLayout(pnUserLayout);
         pnUserLayout.setHorizontalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnUserLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblNik, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
-                .addGap(87, 87, 87))
+            .addGroup(pnUserLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lblmanage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblNik, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnUserLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(lblmanagedby)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnUserLayout.setVerticalGroup(
             pnUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnUserLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblNik, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(lblNik)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblmanagedby)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblmanage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tbManager.setModel(new javax.swing.table.DefaultTableModel(
@@ -276,9 +281,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel3.setText("until");
-
         btsend.setText("Send Email");
+        btsend.setEnabled(false);
         btsend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsendActionPerformed(evt);
@@ -287,25 +291,41 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
 
         lblEmail.setText("Email");
 
+        tfIdEmp.setEnabled(false);
+
         jLabel4.setText("Id Emp");
+
+        cbYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020" }));
+
+        cbMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        cbMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbMonthActionPerformed(evt);
+            }
+        });
+
+        lblyear.setText("Year");
+
+        lblMonth.setText("Month");
+
+        lblReport.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
+        lblReport.setText("Report");
 
         javax.swing.GroupLayout pnManagerMainLayout = new javax.swing.GroupLayout(pnManagerMain);
         pnManagerMain.setLayout(pnManagerMainLayout);
         pnManagerMainLayout.setHorizontalGroup(
             pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnManagerMainLayout.createSequentialGroup()
-                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spMain)
-                    .addComponent(spTableManager)
-                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(spMain, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnManagerMainLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblDate)
                             .addComponent(lblCount)
                             .addComponent(lblName)
-                            .addComponent(lblId)
-                            .addComponent(btClear))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblId))
+                        .addGap(22, 22, 22)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnManagerMainLayout.createSequentialGroup()
                                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -313,9 +333,9 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                                     .addComponent(tfName, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfId, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfCount))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(pnManagerMainLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(pnManagerMainLayout.createSequentialGroup()
                                                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,33 +350,42 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                                                 .addComponent(tfStatus, javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(tfImeSheet, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(pnManagerMainLayout.createSequentialGroup()
-                                        .addGap(56, 56, 56)
+                                        .addGap(52, 52, 52)
+                                        .addComponent(btClear)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btApprove)
-                                        .addGap(18, 18, 18)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btReject)))
                                 .addGap(30, 30, 30)
-                                .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
                                 .addComponent(lblTitle)
                                 .addGap(38, 38, 38)
                                 .addComponent(lblSubTitle)
                                 .addGap(84, 84, 84))))
-                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnManagerMainLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(spTableManager))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnManagerMainLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnManagerMainLayout.createSequentialGroup()
-                                .addGap(219, 219, 219)
-                                .addComponent(tfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfMonth2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblReport)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblMonth)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(lblyear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
                                 .addComponent(btPrint))
                             .addComponent(jSeparator1)))
-                    .addComponent(jSeparator2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnManagerMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(pnManagerMainLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tfIdEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -379,7 +408,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                 .addComponent(spMain, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnManagerMainLayout.createSequentialGroup()
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblTimeSheet)
@@ -395,7 +423,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btApprove)
-                            .addComponent(btReject)))
+                            .addComponent(btReject)
+                            .addComponent(btClear)))
                     .addGroup(pnManagerMainLayout.createSequentialGroup()
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -411,50 +440,30 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCount))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btClear)))
-                .addGap(18, 18, 18)
+                            .addComponent(lblCount)))
+                    .addComponent(pnUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btPrint)
-                    .addComponent(tfMonth2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(tfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
+                    .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblyear)
+                    .addComponent(lblMonth)
+                    .addComponent(lblReport))
+                .addGap(13, 13, 13)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(pnManagerMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btsend)
                     .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEmail)
                     .addComponent(tfIdEmp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(spTableManager, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(33, 33, 33))
         );
-
-        miManager.setText("MENU");
-
-        jMenuItem1.setText("jMenuItem1");
-        miManager.add(jMenuItem1);
-
-        jMenuItem2.setText("jMenuItem2");
-        miManager.add(jMenuItem2);
-
-        jMenuItem3.setText("jMenuItem3");
-        miManager.add(jMenuItem3);
-
-        jMenuItem4.setText("jMenuItem4");
-        miManager.add(jMenuItem4);
-
-        jMenuItem5.setText("jMenuItem5");
-        miManager.add(jMenuItem5);
-
-        jMenuBar1.add(miManager);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -470,23 +479,51 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbManagerMouseClicked
-        tfId.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 4).toString());
-        tfName.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 1).toString());
-        tfDate.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 5).toString());
-        tfCount.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 6).toString());
-        tfKeterangan.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 8).toString());
-        tfImeSheet.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 7).toString());
-        tfStatus.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 9).toString());
-        tfEmail.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 3).toString());
-        tfIdEmp.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 2).toString());
+    private void btsendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsendActionPerformed
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-        btApprove.setEnabled(true);
-        btReject.setEnabled(true);
-    }//GEN-LAST:event_tbManagerMouseClicked
+        Session session = Session.getDefaultInstance(props);
+        try {
+            InternetAddress fromAddress = new InternetAddress("lgg121770@gmail.com");
+            InternetAddress toAddress = new InternetAddress(tfEmail.getText());
 
-    private void btApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApproveActionPerformed
-        int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Approve this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            Message message = new MimeMessage(session);
+            message.setFrom(fromAddress);
+            message.setRecipient(Message.RecipientType.TO, toAddress);
+            message.setSubject("Overtime");
+            message.setText("Halo" + tfIdEmp.getText() + "\nOvertime Anda pada " + tfDate.getText() + " adalah " + tfCount.getText() + "jam\nStatus pengajuan : " + tfStatus.getText() + ".");
+            Transport.send(message, "lgg121770@gmail.com", "123Q123Q@");
+            JOptionPane.showMessageDialog(null, "Berhasil kirim Email!");
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btsendActionPerformed
+
+    private void btClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearActionPerformed
+        tfId.setText("");
+        tfName.setText("");
+        tfDate.setText("");
+        tfCount.setText("");
+        tfKeterangan.setText("");
+        tfImeSheet.setText("");
+        tfStatus.setText("");
+        tfIdEmp.setText("");
+        tfEmail.setText("");
+        btsend.setEnabled(false);
+        btApprove.setEnabled(false);
+        btReject.setEnabled(false);
+    }//GEN-LAST:event_btClearActionPerformed
+
+    private void btRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRejectActionPerformed
+
+        int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Reject this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (reply == JOptionPane.YES_OPTION) {
             String id = tfId.getText();
             String date = tfDate.getText();
@@ -494,22 +531,51 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             String keterangan = tfKeterangan.getText();
             String timesheet = tfImeSheet.getText();
             String status = tfStatus.getText();
-            if (status.equals("0")) {
-                oci.update(id, date, duration, keterangan, "1", timesheet);
-                JOptionPane.showMessageDialog(null, "Success for approve!");
+            if (status.equals("Submitted")) {
+                oci.update(id, date, duration, keterangan, "S02", timesheet);
+                JOptionPane.showMessageDialog(null, "Rejected!");
             } else {
-                JOptionPane.showMessageDialog(null, "Cant approve!");
+                JOptionPane.showMessageDialog(null, "Cant Reject!");
             }
         }
-
         tableData(gdao.getByKarByMang(id));
-    }//GEN-LAST:event_btApproveActionPerformed
+    }//GEN-LAST:event_btRejectActionPerformed
+
+    private void selectedCbMonth() {
+        if (cbMonth.getSelectedItem().toString().equals("January")) {
+            param.put("pmMonth", "1");
+        } else if (cbMonth.getSelectedItem().toString().equals("February")) {
+            param.put("pmMonth", "2");
+        } else if (cbMonth.getSelectedItem().toString().equals("March")) {
+            param.put("pmMonth", "3");
+        } else if (cbMonth.getSelectedItem().toString().equals("April")) {
+            param.put("pmMonth", "4");
+        } else if (cbMonth.getSelectedItem().toString().equals("May")) {
+            param.put("pmMonth", "5");
+        } else if (cbMonth.getSelectedItem().toString().equals("June")) {
+            param.put("pmMonth", "6");
+        } else if (cbMonth.getSelectedItem().toString().equals("July")) {
+            param.put("pmMonth", "7");
+        } else if (cbMonth.getSelectedItem().toString().equals("August")) {
+            param.put("pmMonth", "8");
+        } else if (cbMonth.getSelectedItem().toString().equals("September")) {
+            param.put("pmMonth", "9");
+        } else if (cbMonth.getSelectedItem().toString().equals("October")) {
+            param.put("pmMonth", "10");
+        } else if (cbMonth.getSelectedItem().toString().equals("November")) {
+            param.put("pmMonth", "11");
+        } else if (cbMonth.getSelectedItem().toString().equals("December")) {
+            param.put("pmMonth", "12");
+        } else {
+            JOptionPane.showMessageDialog(null, "Select a Month first!");
+        }
+    }
 
     private void btPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPrintActionPerformed
+        selectedCbMonth();
         param.put("pmId", id);
         param.put("pmName", lblUsername.getText());
-        param.put("pmMonth", tfMonth.getText());
-        param.put("pmMonth2", tfMonth2.getText());
+        param.put("pmYear", cbYear.getSelectedItem().toString());
         try {
             c = sessionFactory.getSessionFactoryOptions().getServiceRegistry().
                     getService(ConnectionProvider.class).getConnection();
@@ -528,8 +594,8 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btPrintActionPerformed
 
-    private void btRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRejectActionPerformed
-        int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Reject this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    private void btApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApproveActionPerformed
+        int reply = JOptionPane.showConfirmDialog(null, "Are You Sure Want to Approve this Overtime?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (reply == JOptionPane.YES_OPTION) {
             String id = tfId.getText();
             String date = tfDate.getText();
@@ -537,54 +603,40 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
             String keterangan = tfKeterangan.getText();
             String timesheet = tfImeSheet.getText();
             String status = tfStatus.getText();
-            if (status.equals("0")) {
-                oci.update(id, date, duration, keterangan, "-1", timesheet);
-                JOptionPane.showMessageDialog(null, "Rejected!");
+            if (status.equals("Submitted")) {
+                oci.update(id, date, duration, keterangan, "S01", timesheet);
+                JOptionPane.showMessageDialog(null, "Success for approve!");
             } else {
-                JOptionPane.showMessageDialog(null, "Cant Reject!");
+                JOptionPane.showMessageDialog(null, "Cant approve!");
             }
         }
         tableData(gdao.getByKarByMang(id));
-    }//GEN-LAST:event_btRejectActionPerformed
+    }//GEN-LAST:event_btApproveActionPerformed
 
-    private void btClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearActionPerformed
-        tfId.setText("");
-        tfName.setText("");
-        tfDate.setText("");
-        tfCount.setText("");
-        tfKeterangan.setText("");
-        tfImeSheet.setText("");
-        tfStatus.setText("");
-        btApprove.setEnabled(false);
-        btReject.setEnabled(false);
-    }//GEN-LAST:event_btClearActionPerformed
-
-    private void btsendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsendActionPerformed
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");
-        props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
-        Session session = Session.getDefaultInstance(props);
-        try {
-            InternetAddress fromAddress = new InternetAddress("adhityawisnuprabowo@gmail.com");
-            InternetAddress toAddress = new InternetAddress(tfEmail.getText());
-
-            Message message = new MimeMessage(session);
-            message.setFrom(fromAddress);
-            message.setRecipient(Message.RecipientType.TO, toAddress);
-            message.setSubject("Overtime");
-            message.setText("Halo"+tfIdEmp.getText()+"\nOvertime Anda pada "+tfDate.getText()+" adalah "+tfCount.getText()+"jam");
-            Transport.send(message, "adhityawisnuprabowo@gmail.com", "didotodid");
-            JOptionPane.showMessageDialog(null, "Berhasil kirim Email!");
-        } catch (MessagingException ex) {
-            ex.printStackTrace();
+    private void tbManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbManagerMouseClicked
+        String idemp = tbManager.getValueAt(tbManager.getSelectedRow(), 2).toString();
+        tfIdEmp.setText(idemp);
+        tfEmail.setText((eci.getById(idemp)).getEmail());
+        tfName.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 1).toString());
+        tfDate.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 3).toString());
+        tfCount.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 4).toString());
+        tfStatus.setText(tbManager.getValueAt(tbManager.getSelectedRow(), 5).toString());
+        for (TimeSheet ts : (eci.getById(idemp)).getTimeSheetList()) {
+            tfImeSheet.setText(ts.getId());
+            String tsid = ts.getId();
+            for (Overtime ov : tsci.getByid(tsid).getOvertimeList()) {
+                tfId.setText(ov.getId());
+                tfKeterangan.setText(ov.getKeterangan());
+            }
         }
-    }//GEN-LAST:event_btsendActionPerformed
+        btApprove.setEnabled(true);
+        btReject.setEnabled(true);
+        btsend.setEnabled(true);
+    }//GEN-LAST:event_tbManagerMouseClicked
+
+    private void cbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMonthActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbMonthActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -593,29 +645,28 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btPrint;
     private javax.swing.JButton btReject;
     private javax.swing.JButton btsend;
+    private javax.swing.JComboBox<String> cbMonth;
+    private javax.swing.JComboBox<String> cbYear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblCount;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblMonth;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblNik;
+    private javax.swing.JLabel lblReport;
     private javax.swing.JLabel lblSubTitle;
     private javax.swing.JLabel lblTimeSheet;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
-    private javax.swing.JMenu miManager;
+    private javax.swing.JLabel lblmanage;
+    private javax.swing.JLabel lblmanagedby;
+    private javax.swing.JLabel lblyear;
     private javax.swing.JPanel pnManagerMain;
     private javax.swing.JPanel pnUser;
     private javax.swing.JSeparator spMain;
@@ -628,8 +679,6 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField tfIdEmp;
     private javax.swing.JTextField tfImeSheet;
     private javax.swing.JTextField tfKeterangan;
-    private javax.swing.JTextField tfMonth;
-    private javax.swing.JTextField tfMonth2;
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfStatus;
     // End of variables declaration//GEN-END:variables

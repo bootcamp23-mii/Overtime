@@ -8,21 +8,21 @@
 	<parameter name="pmId" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="pmMonth2" class="java.lang.String"/>
 	<parameter name="pmEmployee" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="pmYear" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
  ( SELECT COUNT(OVERTIME."STATUS")      
 FROM
-     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '1' AND OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DATE($P{pmMonth2},'YYYYMMDD') AND EMPLOYEE.MANAGER = $P{pmId}) AS APPROVED,
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '1' AND EXTRACT(MONTH FROM OVERTIME.OVERTIME_DATE)= $P{pmMonth} AND EXTRACT(YEAR FROM OVERTIME.OVERTIME_DATE)= $P{pmYear} AND EMPLOYEE.MANAGER = $P{pmId}) AS APPROVED,
 ( SELECT COUNT(OVERTIME."STATUS")    
 FROM
-     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '-1' AND OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DATE($P{pmMonth2},'YYYYMMDD') AND EMPLOYEE.MANAGER = $P{pmId}) AS REJECTED,
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '-1' AND EXTRACT(MONTH FROM OVERTIME.OVERTIME_DATE)= $P{pmMonth} AND EXTRACT(YEAR FROM OVERTIME.OVERTIME_DATE)= $P{pmYear} AND EMPLOYEE.MANAGER = $P{pmId}) AS REJECTED,
 ( SELECT COUNT(OVERTIME."STATUS")    
 FROM
-     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '0' AND OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DATE($P{pmMonth2},'YYYYMMDD') AND EMPLOYEE.MANAGER = $P{pmId}) AS NOT_CONFIRMED,     
+     "ADMIN"."TIME_SHEET" TIME_SHEET INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET" WHERE OVERTIME.STATUS = '0' AND EXTRACT(MONTH FROM OVERTIME.OVERTIME_DATE)= $P{pmMonth} AND EXTRACT(YEAR FROM OVERTIME.OVERTIME_DATE)= $P{pmYear} AND EMPLOYEE.MANAGER = $P{pmId}) AS NOT_CONFIRMED,     
 
 EMPLOYEE."ID" AS EMPLOYEE_ID,
      EMPLOYEE."NAME" AS EMPLOYEE_NAME,
@@ -32,7 +32,7 @@ EMPLOYEE."ID" AS EMPLOYEE_ID,
 FROM
      "ADMIN"."EMPLOYEE" EMPLOYEE INNER JOIN "ADMIN"."TIME_SHEET" TIME_SHEET ON EMPLOYEE."ID" = TIME_SHEET."EMPLOYEE"
      INNER JOIN "ADMIN"."OVERTIME" OVERTIME ON TIME_SHEET."ID" = OVERTIME."TIME_SHEET"
-WHERE OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DATE($P{pmMonth2},'YYYYMMDD') AND EMPLOYEE.MANAGER = $P{pmId}]]>
+WHERE EXTRACT(MONTH FROM OVERTIME.OVERTIME_DATE)= $P{pmMonth} AND EXTRACT(YEAR FROM OVERTIME.OVERTIME_DATE)= $P{pmYear} AND EMPLOYEE.MANAGER = $P{pmId}]]>
 	</queryString>
 	<field name="APPROVED" class="java.math.BigDecimal"/>
 	<field name="REJECTED" class="java.math.BigDecimal"/>
@@ -40,7 +40,7 @@ WHERE OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DAT
 	<field name="EMPLOYEE_ID" class="java.lang.String"/>
 	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
 	<field name="OVERTIME_OVERTIME_DATE" class="java.sql.Timestamp"/>
-	<field name="OVERTIME_STATUS" class="java.math.BigDecimal"/>
+	<field name="OVERTIME_STATUS" class="java.lang.String"/>
 	<field name="OVERTIME_TIME_DURATION" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -164,10 +164,18 @@ WHERE OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DAT
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="68" splitType="Stretch">
+		<band height="132" splitType="Stretch">
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="443" y="0" width="100" height="20" uuid="1d1d7d21-b43c-4205-884a-a63aaa7c6c49"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="443" y="68" width="100" height="20" uuid="e658694c-0705-4e80-8564-338b5baf7991"/>
+				<textFieldExpression><![CDATA[$P{pmName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="88" width="76" height="20" uuid="76e0c666-7524-42f0-a4ed-52e164d20b21"/>
+				<textFieldExpression><![CDATA[$P{pmId}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>
@@ -176,14 +184,6 @@ WHERE OVERTIME.OVERTIME_DATE BETWEEN TO_DATE ($P{pmMonth},'YYYYMMDD') AND TO_DAT
 			<line>
 				<reportElement x="429" y="0" width="100" height="1" uuid="3142741b-9c12-4c76-abc6-e392ffab9045"/>
 			</line>
-			<textField>
-				<reportElement x="443" y="0" width="100" height="20" uuid="e658694c-0705-4e80-8564-338b5baf7991"/>
-				<textFieldExpression><![CDATA[$P{pmName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="451" y="20" width="76" height="20" uuid="76e0c666-7524-42f0-a4ed-52e164d20b21"/>
-				<textFieldExpression><![CDATA[$P{pmId}]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageFooter>
 	<summary>
