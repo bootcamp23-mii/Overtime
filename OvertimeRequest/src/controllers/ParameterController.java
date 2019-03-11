@@ -49,7 +49,7 @@ public class ParameterController implements ParameterControllerInterface{
 
     @Override
     public Parameter getById(String id) {
-        return getById(id);
+        return dao.getById(id);
     }
 
     @Override

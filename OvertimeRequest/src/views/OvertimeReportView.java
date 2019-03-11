@@ -9,6 +9,8 @@ import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
 import controllers.OvertimeControllerInterface;
+import controllers.ParameterController;
+import controllers.ParameterControllerInterface;
 import controllers.TaskController;
 import controllers.TaskControllerInterface;
 import controllers.TimeSheetController;
@@ -52,6 +54,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private NewJInternalFrame fc = new NewJInternalFrame();
     SessionFactory factory = HibernateUtil.getSessionFactory();
     OvertimeControllerInterface oc = new OvertimeController(factory);
+    ParameterControllerInterface pc = new ParameterController(factory);
     String id = Sessions.getId();
     String idtab = Sessions.getIdtab();
     TimeSheetControllerInterface tc = new TimeSheetController(factory);
@@ -72,6 +75,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             btDelete.setEnabled(true);
         } else {
             btDelete.setEnabled(false);
+            tfNik.setEnabled(true);
+            tfName.setEnabled(true);
         }
 
         jdSatu.setDateFormatString("yyyy-MM-dd");
@@ -136,9 +141,12 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
 
     public void setData(String idTabel) {
         if (idTabel != "") {
-
+            
+            
+            System.out.println(idtab);
             Employee e = ec.getById(id);
             Task t = tic.getByid(oc.getById(tc.getByid(idtab).getOvertimeList().get(0).getId()).getTaskList().get(0).getId());
+            System.out.println(t.getName());
             tfNik.setText(id);
             tfName.setText(e.getName());
             tfTimeDuration.setText((tc.getByid(idtab).getOvertimeList().get(0).getTimeDuration()).toString());
@@ -242,6 +250,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         jLabel8.setText("Detail");
 
+        tfNik.setEditable(false);
         tfNik.setForeground(new java.awt.Color(128, 137, 149));
         tfNik.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -249,6 +258,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             }
         });
 
+        tfName.setEditable(false);
         tfName.setForeground(new java.awt.Color(128, 137, 149));
 
         tfTimeDuration.setCaretColor(new java.awt.Color(128, 137, 149));
@@ -258,10 +268,7 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
             }
         });
 
-        tfTask.setForeground(new java.awt.Color(128, 137, 149));
-
         taDetail.setColumns(20);
-        taDetail.setForeground(new java.awt.Color(128, 137, 149));
         taDetail.setRows(5);
         jScrollPane1.setViewportView(taDetail);
 
@@ -411,8 +418,8 @@ public class OvertimeReportView extends javax.swing.JInternalFrame {
     private void btSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSubmitActionPerformed
         // TODO add your handling code here:
 
-        if (Integer.parseInt(tfTimeDuration.getText()) < 2 || Integer.parseInt(tfTimeDuration.getText()) > 20) {
-            JOptionPane.showMessageDialog(null, "Durasi Overtime minimal 2 jam dan maksimal 20 jam");
+        if (Integer.parseInt(tfTimeDuration.getText()) < Integer.parseInt(pc.getById("PMinDuration").getValue()) || Integer.parseInt(tfTimeDuration.getText()) > Integer.parseInt(pc.getById("PMaxDuration").getValue())) {
+            JOptionPane.showMessageDialog(null, "Durasi Overtime minimal 2 jam dan maksimal 3 jam perhari");
         } else {
             
             

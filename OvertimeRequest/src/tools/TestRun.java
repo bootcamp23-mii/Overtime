@@ -9,6 +9,7 @@ import controllers.DivisionController;
 import controllers.OvertimeController;
 import controllers.RoleController;
 import controllers.UserController;
+import controllers.UserControllerInterface;
 import daos.GeneralDAO;
 import models.Division;
 import models.Employee;
@@ -26,6 +27,8 @@ public class TestRun {
 //        GeneralDAO gdao = new GeneralDAO(factory);
 //        OvertimeController oc= new OvertimeController(factory);
         DivisionController dc=new DivisionController(factory);
+        UserControllerInterface uc=new UserController(factory);
+        uc.save("alien", "alien", "E01");
 //        RoleController rc= new RoleController(factory);
 //        System.out.println(rc.getById("R01").getId());
 //        System.out.println( oc.insert("o020", "2019-03-04", "180", "masuk kuliah", "1", "TS07"));

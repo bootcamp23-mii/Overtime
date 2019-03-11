@@ -171,9 +171,9 @@ public class LoginView extends javax.swing.JInternalFrame {
             String u = rc.getByid(x).getJob().getId();
             System.out.println(u);
             if (u.equals("J01")) {
-                ManagerMainView mv = new ManagerMainView();
-                this.getParent().add(mv);
-                mv.setVisible(true);
+                EmployeeMainView ev = new EmployeeMainView();
+                this.getParent().add(ev);
+                ev.setVisible(true);
             } else if (u.equals("J02")) {
                 EmployeeMainView ev = new EmployeeMainView();
                 this.getParent().add(ev);

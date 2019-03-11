@@ -65,7 +65,7 @@ public class ManagerMainView extends javax.swing.JInternalFrame {
     Connection c;
     String id = Sessions.getId();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-    SimpleDateFormat reFormat = new SimpleDateFormat("YYYY-MM-DD HH24:MI:SS");
+    SimpleDateFormat reFormat = new SimpleDateFormat("YYYY-MM-DD HH24:mm:SS");
 
     /**
      * Creates new form ManagerView

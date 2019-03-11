@@ -5,6 +5,7 @@
  */
 package views;
 
+import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 import controllers.EmployeeController;
 import controllers.EmployeeControllerInterface;
 import controllers.OvertimeController;
@@ -14,11 +15,15 @@ import controllers.TimeSheetControllerInterface;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -60,17 +65,23 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     JasperDesign JasDes;
     Connection c;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+    private TableRowSorter tabsorter;
 
     public EmployeeMainView() {
         initComponents();
+        System.out.println(id);
         List a = ec.getById(id).getTimeSheetList();
         Employee u = ec.getById(id);
         lblNik.setText(u.getId());
         lblUsername.setText(u.getName());
         lblManager.setText("Manager: " + u.getManager().getName());
         tableData(a);
+        hideCol();
         setukuran();
         pmMonth.setToolTipText("MM");
+        if (!u.getRoleList().get(0).getJob().getId().equals("J01")) {
+            jMenuItem3.setEnabled(false);
+        }
 
     }
 
@@ -78,26 +89,46 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         this.setSize(670, 510);
     }
 
+    private int sum() {
+        Date ys = new Date(); // membuat oject ys dari class Date
+        SimpleDateFormat s = new SimpleDateFormat("dd-MM-yyyy");
+        DefaultTableModel dataModel = (DefaultTableModel) tbEmployee.getModel();
+        int jumlah = dataModel.getRowCount();
+        int sumDurasi = 0;
+
+        for (int i = 0; i < jumlah; i++) {
+            int dataBerat = Integer.valueOf(dataModel.getValueAt(i, 3).toString());
+            sumDurasi += dataBerat;
+
+        }
+        return sumDurasi;
+    }
+
     private void tableData(List<TimeSheet> ts) {
 //        jobs = jc.getAll();
-        Object[] columnNames = {"Nomor", "Overtime Date", "Duration", "Status"};
+        Object[] columnNames = {"Nomor", "id", "Overtime Date", "Duration", "Status"};
 
         Object[][] data = new Object[ts.size()][columnNames.length];
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = (i + 1);
-//            data[i][1] = ts.get(i).getId();
+            data[i][1] = ts.get(i).getId();
             for (Object obj : tc.getByid(ts.get(i).getId()).getOvertimeList()) {
                 Overtime overtime = (Overtime) obj;
-                data[i][1] = dateFormat.format(overtime.getOvertimeDate());
-                data[i][2] = overtime.getTimeDuration();
-                data[i][3] = overtime.getStatus().getStatus();
-//      
-
+                data[i][2] = dateFormat.format(overtime.getOvertimeDate());
+                data[i][3] = overtime.getTimeDuration();
+                data[i][4] = overtime.getStatus().getStatus();
             }
         }
         myTable = new DefaultTableModel(data, columnNames);
         tbEmployee.setModel(myTable);
+    }
+
+    private void hideCol() {
+        tbEmployee.getColumnModel().getColumn(1).setMinWidth(0);
+        tbEmployee.getColumnModel().getColumn(1).setMaxWidth(0);
+
+        tbEmployee.doLayout();
     }
 
     private void tableData2(List<TimeSheet> ts) {
@@ -149,6 +180,8 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         jMonth = new com.toedter.calendar.JMonthChooser();
         jMenuBar1 = new javax.swing.JMenuBar();
         miManager = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setClosable(true);
@@ -272,6 +305,22 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
         miManager.setText("MENU");
 
+        jMenuItem2.setText("Profile");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        miManager.add(jMenuItem2);
+
+        jMenuItem3.setText("Review Overtime");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        miManager.add(jMenuItem3);
+
         jMenuItem1.setText("Logout");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,6 +338,9 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
 
     private void btReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReportActionPerformed
         // TODO add your handling code here:
+//        if(sum()>=20){
+//            JOptionPane
+//        }
         this.setVisible(false);
         OvertimeReportView op = new OvertimeReportView();
         this.getParent().add(op);
@@ -356,6 +408,24 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
         pmMonth.setToolTipText("abcdefgg");
     }//GEN-LAST:event_pmMonthFocusGained
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        Profile pf = new Profile();
+        this.getParent().add(pf);
+        pf.setVisible(true);
+        Sessions.setId("");
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        ManagerMainView mv = new ManagerMainView();
+        this.getParent().add(mv);
+        mv.setVisible(true);
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btOtReport;
@@ -363,6 +433,8 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private com.toedter.calendar.JMonthChooser jMonth;
     private javax.swing.JLabel lblManager;
     private javax.swing.JLabel lblNik;
@@ -377,4 +449,5 @@ public class EmployeeMainView extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane spTableManager;
     private javax.swing.JTable tbEmployee;
     // End of variables declaration//GEN-END:variables
+
 }
